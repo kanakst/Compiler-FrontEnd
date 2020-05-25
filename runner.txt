@@ -1,0 +1,17 @@
+#!/bin/bash
+clear
+
+echo "---Starting Script---"
+echo
+echo "---Generating Vars---"
+echo
+INPUT="lexer/*.java  Main.java"
+
+
+
+echo "-----Compiling-------"
+
+javac $INPUT
+
+echo
+echo "--------FINISH--------"
