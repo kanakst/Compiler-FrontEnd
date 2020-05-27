@@ -5,26 +5,32 @@ import java.io.*;
 import java.util.*;
 
 public class Parser {
+    private Lexer lex;         // belong to parser class only
+    private Token lookahead;
 
-    private Token token;
+    private Node root, node;
     
-    public Parser(Token t) {
-	token = t;
-    }
-
-    public void program() {
-	String tokenName;
-
-	tokenName = token.toString();
-	if(token.tag >= 500) { // tag range for operations/ statements
-
-	}
-	else if(token.tag >= 400 && token.tag < 500) {
-
-	}
-	else if(token.tag >= 300 && token.tag < 400) {
-
-	}
+    public Parser(Lexer lex) {
 	
     }
+    public boolean match(String title) {
+	
+	if(lookahead.toString() == title)
+	    return true;
+	else return false;
+    }
+    public void program(Token token) {
+
+	lookahead = token;
+	System.out.println("parser:program: lookahead is " + lookahead.toString());
+
+	switch(lookahead) {
+	case "if"://actually have to check the syntax, with match() function, iterating over tokens // but for now:
+	    node = new If(
+	    
+	}
+
+    }
+
+    
 }
