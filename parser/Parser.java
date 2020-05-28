@@ -10,25 +10,60 @@ public class Parser {
 
     private Node root, node;
     
-    public Parser(Lexer lex) {
-	
+    public Parser(Lexer lexer) {
+	lex = lexer;
     }
-    public boolean match(String title) {
-	
-	if(lookahead.toString() == title)
-	    return true;
-	else return false;
-    }
-    public void program(Token token) {
-
-	lookahead = token;
-	System.out.println("parser:program: lookahead is " + lookahead.toString());
-
-	switch(lookahead) {
-	case "if"://actually have to check the syntax, with match() function, iterating over tokens // but for now:
-	    node = new If(
+    public void match(String title) throws IOException { //match and moves!
+	if(title.equals(lookahead.toString()) == false) {
 	    
+	    System.out.println("lookahead is : " + lookahead.toString());
+	    System.out.println("title is     : " + title);
+	    throw new IOException ("Syntax Error in match");
 	}
+	
+	lookahead = lex.scan(); // scanning for next token
+    }
+            
+    public void program() throws IOException {
+
+	
+
+	Expr expr;
+	Stmt stmt;
+
+
+	while(lex.peek != '\n') {
+	    
+	    lookahead = lex.scan();
+	    System.out.println("lookahead : " + lookahead.getClass() + "--->  " + lookahead.toString()); // printer for scanner stuff
+	    //System.out.println("Class of lookahead token is : " + lookahead.getClass());
+	    // inside this while loop, have to make the parser AST things !
+	    
+	    switch(lookahead.toString()) {
+	    case "if":          //actually have to check the syntax, with match() function, iterating over tokens // but for now:
+		match("if");
+		match("(");
+		System.out.println("matched for if case!");
+		//expr = new matchExpr(); //should be an expression here
+		//match(")");
+		//stmt = new matchStmt(); //should be a statement here
+
+		//match(";"); //do I really need it here
+
+		//If ifStmt = new If(expr, stmt);
+		//ifStmt.printNodes();
+
+	    default :
+		
+		continue;
+	    }
+	
+
+
+	}
+	
+
+	
 
     }
 

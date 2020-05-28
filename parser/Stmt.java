@@ -6,8 +6,10 @@ import java.io.*;
 public class Stmt extends Node {
     private int val;
     private String name;
+    
     Node left;
     Node right;
+    
     public Stmt() {} //super???
     public Stmt(Node left, Node right){
 	this.left = left;

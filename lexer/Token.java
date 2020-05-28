@@ -5,6 +5,6 @@ public class Token{
     public Token(int t){ tag = t;}
     //implement
     public String toString(){
-	return "Token   : " +  (char)tag; //is it possible?
+	return ""+(char)tag; //is it possible?
     }
 }

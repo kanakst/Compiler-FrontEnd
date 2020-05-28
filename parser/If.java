@@ -11,8 +11,17 @@ public class If extends Stmt {
     Stmt right;
 
     public If(Expr expr, Stmt stmt) {
+	name = "If";
 	left = expr;
 	right = stmt;
-	System.out.println("If constructor is awaken!");
+	System.out.println("If constructor was called!");
     }
+
+    public void printNodes() {
+	System.out.println("root  node: " + name);
+	System.out.println("left  node: expr");
+	System.out.println("right node: stmt");
+    }
+
+    
 }

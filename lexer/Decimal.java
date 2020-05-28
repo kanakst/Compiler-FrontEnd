@@ -8,6 +8,6 @@ public class Decimal extends Token{
 	value = v;
     }
     public String toString(){
-	return new String("Decm    : " + value);
+	return ""+value;
     }
 }

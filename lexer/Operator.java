@@ -10,7 +10,7 @@ public class Operator extends Word {
     }
 
     public String toString() {
-	return "Operator: " + operatorType;
+	return operatorType;
     }
 
     public static final Operator

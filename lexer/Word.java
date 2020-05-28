@@ -19,7 +19,7 @@ public class Word extends Token{
 	    return "Word  : "+ lexeme;
 	}
 	*/
-	return "Word    : " + lexeme;
+	return lexeme;
     }
 
     //some of the reserved words

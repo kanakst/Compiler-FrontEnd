@@ -31,7 +31,7 @@ public class Lexer{
     public Token scan() throws IOException{
 
 	//2.6.1. Removing of White Spaces and Comments
-	if(peek == ' '){ //checking this because, expressions can be given without spaces
+	if(peek == ' ') { //checking this because, expressions can be given without spaces
 	    while(true){
 		peek = (char) System.in.read();
 		if(peek == ' ' || peek == '\t')
