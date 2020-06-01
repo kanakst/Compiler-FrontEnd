@@ -10,7 +10,7 @@ public class Main{
 	Lexer mylexer = new Lexer();
 	Parser myparser = new Parser(mylexer);
 	
-	myparser.program();
+	myparser.buildAST();
 	
     }
 }
