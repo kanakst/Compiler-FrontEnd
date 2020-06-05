@@ -5,7 +5,7 @@ echo "---Starting Script---"
 echo
 echo "---Generating Vars---"
 echo
-INPUT="parser/*.java lexer/*.java  Main.java"
+INPUT="parser/*.java lexer/*.java AST/*.java VisitorPkg/*.java Main.java"
 
 
 

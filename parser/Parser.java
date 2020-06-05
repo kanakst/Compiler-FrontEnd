@@ -1,6 +1,7 @@
 package parser;
 
 import lexer.*; // is this even legal?
+import AST.*;
 import java.io.*;
 import java.util.*;
 
@@ -13,53 +14,78 @@ public class Parser {
     public Parser(Lexer lexer) {
 	lex = lexer;
     }
-       
-
-    // public void statement(); implement this later on, start with just an expression for now (it includes: factor, term, ...)...
     
-    public void stmt() throws IOException {
-	//Assignment
-
+    public Stmt stmt() throws IOException {
 	
+	Stmt res;
 	
-	// id := expr          {stmt =  new  Assign(id, expr);}  -->  is this where scope or environment should be used?
-	
-	// if expr then stmt   {stmt =  new    If(expr, stmt);}
+	switch(lookahead.toString()) {
+	case "begin" : // 
+	    // ...
+	case "if" :
+	    // ...
+	case "while" :
+	    //
+	default : // assign
+	    // any other word (lexeme)
+	    Token t = lookahead;
+	    String t_type = tokenType;
 
-	// while expr do stmt  {stmt =  new While(expr, stmt);}
+	    Expr id = new Expr(t); // ??is this correct?
+	    
+	    lookahead = lex.scan();
+	    tokenType = lookahead.getClass().toString().substring(12);
 
-	// begin opt_stmts end {stmt = opt_stmts;             }
+	    if (lookahead.tag == Tag.ASSIGN) {
+		
+		lookahead = lex.scan();
+		tokenType = lookahead.getClass().toString().substring(12);
+		Expr expr = expr();
+		
+		res = new Assign(id, expr);
+	    }
+	    else {
+		throw new IOException ("in Statement : Syntax Error");
+	    }
+	    
+	    
+	}
+
+	return res;
 	
     }
-    
-    
-    public Cell expr() throws IOException {
+	
 
-	Cell term1 = term();
-	Cell terms = moreterms(term1);
+    
+    
+    
+    public Expr expr() throws IOException {
+
+	Expr term1 = term();
+	Expr terms = moreterms(term1);
 	return terms;
     }
 
-    public Cell term() throws IOException {
+    public Expr term() throws IOException {
 		
-	Cell factor1 = factor();
-	Cell factors = morefactors(factor1);
+	Expr factor1 = factor();
+	Expr factors = morefactors(factor1);
 
 	return factors; 
     }
     
-    public Cell moreterms(Cell termFirst) throws IOException {
-
-	if (tokenType.equals("Operator") && (lookahead.toString().equals("+") || lookahead.toString().equals("-"))) {
+    public Expr moreterms(Expr termFirst) throws IOException {
+	//(tokenType.equals("Operator") && (lookahead.toString().equals("+") || lookahead.toString().equals("-")))
+	if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {
 	    
-	    Cell operatorNode = new Cell(lookahead);
+	    Expr operatorNode = new Expr(lookahead);
 	    
 	    lookahead = lex.scan();
 	    tokenType = lookahead.getClass().toString().substring(12);
 
 	    operatorNode.left = termFirst;
 	    
-	    Cell termSecond = term();                        
+	    Expr termSecond = term();                        
   
 	    operatorNode.right = moreterms(termSecond);  
 
@@ -75,37 +101,37 @@ public class Parser {
 	else throw new IOException("Syntax error : not a valid operator for term!");
     }   
 
-    public Cell factor() throws IOException {
+    public Expr factor() throws IOException {
 
 	if (tokenType.equals("Word") || tokenType.equals("Num")) {
 	    
-	    Cell cell = new Cell(lookahead);
+	    Expr factor = new Expr(lookahead);
 	    
 	    
 	    lookahead = lex.scan();                                    
 	    tokenType = lookahead.getClass().toString().substring(12); 
 
 	    
-	    return cell;
+	    return factor;
 	}
 	
 	else throw new IOException("Syntax error : not a valid factor!");
 
     }
     
-    public Cell morefactors(Cell factorFirst) throws IOException {
+    public Expr morefactors(Expr factorFirst) throws IOException {
 	
-	if (tokenType.equals("Operator") && ( lookahead.toString().equals("*") || lookahead.toString().equals("/") || lookahead.toString().equals("div") || lookahead.toString().equals("mod") )) { // should be one of these operators : " * / div mod "
+	if (lookahead.tag == Tag.MULTIPLYSIGN || lookahead.tag == Tag.DIVIDESIGN || lookahead.tag == Tag.MOD ) { // should be one of these operators : " * / div mod "
 		
 	   
-	    Cell operatorNode = new Cell(lookahead);
+	    Expr operatorNode = new Expr(lookahead);
 
 	    lookahead = lex.scan();
 	    tokenType = lookahead.getClass().toString().substring(12);
 
 	    operatorNode.left = factorFirst;
 	    
-	    Cell factorSecond = factor();                   
+	    Expr factorSecond = factor();                   
   
 	    operatorNode.right = morefactors(factorSecond); 
 
@@ -117,7 +143,7 @@ public class Parser {
 	   
 	}
 	else if (lookahead.toString().equals(";"))  return factorFirst;
-
+	
 	
 	else if (lookahead.toString().equals("+") || lookahead.toString().equals("-"))  return factorFirst;
 	    
@@ -125,10 +151,11 @@ public class Parser {
 	else throw new IOException("Syntax error : not a valid operator for factor!");
     }
 
-    public void traverse(Cell root) {
+    public void traverse(Expr root) {
 	if(root == null)
 	    return;
-	System.out.println(root.name);
+	System.out.println(root.name + " tag : " + root.value);
+	
 	traverse(root.left);
 	traverse(root.right);
     }
@@ -142,11 +169,12 @@ public class Parser {
 	
 	lookahead = lex.scan();
 	tokenType = lookahead.getClass().toString().substring(12);
-	
+	//System.out.println(lookahead.tag);
 	// 2. As soon as the scanner reads input and makes a token, it passes both the token and token's type to 'expression'('statement') method
 
-	Cell tree = expr();
-	System.out.println("Tree is : ");
+	Stmt tree = stmt();
+	//Cell tree = stmt();
+	//System.out.println("Tree is : ");
 	traverse(tree);
 	
 	
