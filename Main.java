@@ -1,5 +1,7 @@
 import lexer.*;
-import parser.*;
+//import parser.*;
+import newparser.*;
+
 
 import java.io.*;
 import java.util.*;
@@ -10,7 +12,7 @@ public class Main{
 	Lexer mylexer = new Lexer();
 	Parser myparser = new Parser(mylexer);
 	
-	myparser.buildAST();
+	myparser.parse();
 	
     }
 }

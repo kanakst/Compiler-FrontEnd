@@ -1,0 +1,16 @@
+package newAST;
+
+import VisitorPkg;
+import parser.*;
+import lexer.*;
+
+public class Identifier extends Expr {
+    public String name;
+
+    public Identifier(String n0) {
+	name = n0;
+    }
+    public int accept(Visitor v) {
+	return v.visit(this);
+    }
+}

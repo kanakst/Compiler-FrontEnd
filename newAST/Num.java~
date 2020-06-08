@@ -1,0 +1,17 @@
+package newAST;
+
+import VisitorPkg;
+import parser.*;
+import lexer.*;
+
+public class Num extends Expr {
+    public int value; // ? or shd be String name?
+
+    public Num(int val) {
+	value = val;
+    }
+
+    public int accept(Visitor v) {
+	return v.visit(this);
+    }
+}
