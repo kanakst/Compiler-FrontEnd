@@ -25,6 +25,7 @@ public class Lexer{
 	reserve(Operator.plusSign);
 	reserve(Operator.multiplySign);
 	reserve(Operator.divideSign);
+	//reserve(Operator.semicolonSign);
     }
     
     // void ? or returning token?

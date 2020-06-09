@@ -22,6 +22,7 @@ public class Operator extends Word {
 	minusSign = new Operator(Tag.MINUSSIGN, "-"),
 	plusSign = new Operator(Tag.PLUSSIGN, "+"),
 	multiplySign = new Operator(Tag.MULTIPLYSIGN, "*"),
-	divideSign = new Operator(Tag.DIVIDESIGN, "/"); //also symbol based hmm
+	divideSign = new Operator(Tag.DIVIDESIGN, "/"),
+	semicolonSign = new Operator(Tag.SEMICOLON, ";"); //also symbol based hmm
     
 }
