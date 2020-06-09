@@ -12,4 +12,6 @@ public interface Visitor {
     public int visit(Identifier n);
     public int visit(Numerical n);
 
+    public int visit(Assign n);
+
 }

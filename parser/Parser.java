@@ -6,7 +6,6 @@ import java.io.*;
 import java.util.*;
 
 public class Parser {
-
     private Lexer lex;         
     private Token lookahead;
     private String tokenType;
@@ -165,16 +164,12 @@ public class Parser {
     
     public void buildAST() throws IOException {
 
-	// 1. Have to Implement a loop here, reading Tokens until EndOfTokens
 	
 	lookahead = lex.scan();
 	tokenType = lookahead.getClass().toString().substring(12);
-	//System.out.println(lookahead.tag);
-	// 2. As soon as the scanner reads input and makes a token, it passes both the token and token's type to 'expression'('statement') method
 
 	Stmt tree = stmt();
-	//Cell tree = stmt();
-	//System.out.println("Tree is : ");
+
 	traverse(tree);
 	
 	

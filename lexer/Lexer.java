@@ -18,6 +18,11 @@ public class Lexer{
     public Lexer(){
 	reserve(new Word(Tag.IF,  "if")  );
 	reserve(new Word(Tag.ELSE, "else") );
+
+	reserve(new Word(Tag.WHILE, "while"));
+	reserve(new Word(Tag.BEGIN, "begin"));
+	
+	
 	reserve(Operator.assign);
 	reserve(Operator.division);
 	reserve(Operator.mod);

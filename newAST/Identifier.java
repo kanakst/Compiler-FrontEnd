@@ -7,6 +7,7 @@ import lexer.*;
 public class Identifier extends Expr {
     public String name;
     public Token token;
+    public int value;
     // what about tag???
     
     public Identifier(Token t) {
