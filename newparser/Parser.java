@@ -24,7 +24,8 @@ public class Parser {
    
 
     public void match(String str) throws IOException {
-	if(lookahead.toString().equals(str)) {
+	//System.out.println(lookahead.toString()); // just checking for "then" ... in stmt()
+	if (lookahead.toString().equals(str)) {
 	    lookahead  = lex.scan();
 	}
 	else throw new IOException ("in match : Syntax Error!");
@@ -33,20 +34,12 @@ public class Parser {
     public void parse() throws IOException {
 	lookahead = lex.scan();
 	while (lookahead != null) {
-	    //Expr ex = expr();
-	    //ex.accept(visitor);
-	    //match(";");
-
 	    Stmt st = stmt();
+	    st.accept(visitor);
 	    match(";");
 	}
-	/*
-	Expr ex = expr();
-	ex.accept(visitor);
-	match(";");
-	*/
      }
-
+    // change this !!! 
     public Expr Start() throws IOException {
 	
 	Expr e;
@@ -58,36 +51,82 @@ public class Parser {
     public Stmt stmt() throws IOException {
 
 	if (lookahead.tag == Tag.IF) {
-	    System.out.println("st IF : ");
+	    //System.out.println("st IF : ");
+
+	    lookahead = lex.scan();
+
+	    Expr expr = expr(); // ???
+
+	    match("then"); /////////////////////// ?????????
+
+	    Stmt stmt = stmt(); // ???????
+
+	    Stmt if_stmt = new If(expr, stmt);
+
+	    stmtList.add(if_stmt);
+	    
+	    return if_stmt;
  
 	} else if (lookahead.tag == Tag.WHILE) {
-	    System.out.println("st WHILE : ");
+	    //System.out.println("st WHILE : ");
+
+	    lookahead = lex.scan();
+
+	    Expr expr = expr();
+
+	    match("do");
+
+	    Stmt stmt = stmt();
+
+	    Stmt while_stmt = new While(expr, stmt);
+
+	    stmtList.add(while_stmt);
+
+	    return while_stmt;
+
+	    
 	} else if (lookahead.tag == Tag.BEGIN) {
 	    System.out.println("st BEGIN : ");
-	} else if (lookahead.tag == Tag.ID) {
+
+	    lookahead = lex.scan();
+	    //continue;
 	    
-	    System.out.println("st IDENTIFIER/WORD : ");
+	    Stmt stmt = stmt();
+	    //stmt.accept(visitor);
+	    match("end");
+	    return stmt;
+	   
+	    
+	    //return stmt;
+	    
+	} else if (lookahead.tag == Tag.ID) { 
+	    
+	    // System.out.println("st IDENTIFIER/WORD : ");
 
 	    Identifier id = new Identifier(lookahead);
        
 	    lookahead = lex.scan();
 
 	    if (lookahead.tag == Tag.ASSIGN) {
-
+		
 		lookahead = lex.scan();
 		
 		Expr expr = expr();
-
+		
 		Stmt stmt = new Assign(id, expr);
 
+		//do I need to add this to stmt list?
+		// and return void?
+		stmtList.add(stmt);
+		
 		return stmt;
 		
-
+		
 	    } else throw new IOException ("in stmt() in Tag.ID : Syntax Error");
 	    
 	} else throw new IOException ("in stmt() : Syntax Error");
     
-	return null; // SHOULD BE CHANGED!!!
+	//return null; // SHOULD BE CHANGED!!!
 	
 	
     }
@@ -123,6 +162,9 @@ public class Parser {
 	} else if (lookahead.toString().equals(";")) {
 	    return termFirst;
 	}
+	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END){
+	    return termFirst;
+	}
 	else throw new IOException("in moreterms: Syntax Error");
     }
 
@@ -147,7 +189,7 @@ public class Parser {
 	    }
 	    Expr e1 = new TimesExpr(factorFirst, e2);
 	    return e1;
-	} else if (lookahead.tag == Tag.DIVIDESIGN || lookahead.tag == Tag.DIVISION) {
+	} else if (lookahead.tag == Tag.DIVIDESIGN || lookahead.tag == Tag.DIVISION ) {
 	    lookahead = lex.scan();
 	    Expr factorSecond = factor();
 	    Expr e2 = morefactors(factorSecond);
@@ -156,11 +198,24 @@ public class Parser {
 	    }
 	    Expr e1 = new DivideExpr(factorFirst, e2);
 	    return e1;
+	} else if (lookahead.tag == Tag.MOD) {
+	    lookahead = lex.scan();
+	    Expr factorSecond = factor();
+	    Expr e2 = morefactors(factorSecond);
+	    if (e2 == null) {
+		e2 = factorSecond;
+	    }
+	    Expr e1 = new ModExpr(factorFirst, e2);
+	    return e1;
+
 	} else if (lookahead.toString().equals(";")) {
 	    return factorFirst;
 	}
 	else if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {
 	    return factorFirst;
+	}
+	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO ||  lookahead.tag == Tag.END){
+	    return factorFirst; //???
 	}
 	else throw new IOException("in morefactors() : Syntax Error");
     }

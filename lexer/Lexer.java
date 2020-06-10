@@ -21,6 +21,10 @@ public class Lexer{
 
 	reserve(new Word(Tag.WHILE, "while"));
 	reserve(new Word(Tag.BEGIN, "begin"));
+
+	reserve(new Word(Tag.THEN, "then"));
+	reserve(new Word(Tag.DO, "do"));
+	reserve(new Word(Tag.END, "end"));
 	
 	
 	reserve(Operator.assign);
@@ -30,7 +34,7 @@ public class Lexer{
 	reserve(Operator.plusSign);
 	reserve(Operator.multiplySign);
 	reserve(Operator.divideSign);
-	//reserve(Operator.semicolonSign);
+	//reserve(Operator.semicolonSign); // ???
     }
     
     // void ? or returning token?

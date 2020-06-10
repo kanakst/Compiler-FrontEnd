@@ -16,6 +16,13 @@ public class Interpreter implements Visitor {
 	return n.e1.accept(this) / n.e2.accept(this);
     }
 
+    public int visit(ModExpr n) {
+	System.out.println("mod");
+	return n.e1.accept(this) % n.e2.accept(this);
+    }
+
+    
+
     public int visit(PlusExpr n) {
 	System.out.println("+");
 	return n.e1.accept(this) + n.e2.accept(this);
@@ -43,7 +50,22 @@ public class Interpreter implements Visitor {
 
     public int visit(Assign n) {
 	System.out.println("Assign");
-	return n.id.accept(this); // is it like this???
+        n.id.accept(this); // is it like this???
+	n.expr.accept(this);
+	return 0;
+    }
+
+    public int visit(If n) {
+	System.out.println("If");
+	n.expr.accept(this);
+	n.stmt.accept(this);
+	return 0; // ???
+    }
+    public int visit(While n) {
+	System.out.println("While");
+	n.expr.accept(this);
+	n.stmt.accept(this);
+	return 0;
     }
     
 }
