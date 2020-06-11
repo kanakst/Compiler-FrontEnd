@@ -10,7 +10,7 @@ public class TimesExpr extends Expr {
 	e1 = a1;
 	e2 = a2;
     }
-    public int accept(Visitor v) {
-	return v.visit(this);
+    public void accept(Visitor v) {
+	 v.visit(this);
     }
 }

@@ -16,6 +16,7 @@ public class Parser {
 
     public List<Stmt> stmtList = new ArrayList<Stmt>();
     public int currIndex = 0;
+    public static int tabs = 0;
     
     public Parser(Lexer lexer) {
 	lex = lexer;
@@ -86,7 +87,7 @@ public class Parser {
 
 	    
 	} else if (lookahead.tag == Tag.BEGIN) {
-	    System.out.println("st BEGIN : ");
+	    //System.out.println("st BEGIN : ");
 
 	    lookahead = lex.scan();
 	    //continue;

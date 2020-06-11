@@ -14,7 +14,7 @@ public class Identifier extends Expr {
 	token = t;
 	name = token.toString();
     }
-    public int accept(Visitor v) {
-	return v.visit(this);
+    public void accept(Visitor v) {
+	v.visit(this);
     }
 }

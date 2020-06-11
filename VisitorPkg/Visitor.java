@@ -3,18 +3,18 @@ import newAST.*;
 
 public interface Visitor {
     //Expr
-    public int visit(TimesExpr n);
-    public int visit(DivideExpr n);
-    public int visit(ModExpr n);
+    public void visit(TimesExpr n);
+    public void visit(DivideExpr n);
+    public void visit(ModExpr n);
     
-    public int visit(PlusExpr n);
-    public int visit(MinusExpr n);
+    public void visit(PlusExpr n);
+    public void visit(MinusExpr n);
 
-    public int visit(Identifier n);
-    public int visit(Numerical n);
+    public void visit(Identifier n);
+    public void visit(Numerical n);
 
     //Stmt
-    public int visit(Assign n);
-    public int visit(If n);
-    public int visit(While n);
+    public void visit(Assign n);
+    public void visit(If n);
+    public void visit(While n);
 }

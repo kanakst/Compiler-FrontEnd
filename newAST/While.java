@@ -14,7 +14,7 @@ public class While extends Stmt {
 	// anything else???????
     }
 
-    public int accept(Visitor v) {
-	return v.visit(this);
+    public void accept(Visitor v) {
+	v.visit(this);
     }
 }

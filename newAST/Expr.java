@@ -1,9 +1,9 @@
 package newAST;
 
 import VisitorPkg.*;
-import parser.*;
+import newparser.*;
 import lexer.*;
 
 public abstract class Expr {
-    public abstract int accept(Visitor v);
+    public abstract void accept(Visitor v);
 }

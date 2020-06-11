@@ -13,7 +13,7 @@ public class If extends Stmt {
 	stmt = b;
 	// ANYTHING ELSE??????????????????
     }
-    public int accept(Visitor v) {
-	return v.visit(this);
+    public void accept(Visitor v) {
+	v.visit(this);
     }
 }

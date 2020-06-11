@@ -5,5 +5,5 @@ import parser.*;
 import lexer.*;
 
 public abstract class Stmt {
-    public abstract int accept(Visitor v);
+    public abstract void accept(Visitor v);
 }

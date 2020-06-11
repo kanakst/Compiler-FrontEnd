@@ -12,7 +12,7 @@ public class MinusExpr extends Expr {
 	e2 = a2;
     }
 
-    public int accept(Visitor v) {
-	return v.visit(this);
+    public void accept(Visitor v) {
+	v.visit(this);
     }
 }
