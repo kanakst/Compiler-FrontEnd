@@ -38,6 +38,8 @@ public class Parser {
 	    Stmt st = stmt();
 	    st.accept(visitor);
 	    match(";");
+	    System.out.println();
+	    tabs = 0;
 	}
      }
     // change this !!! 
