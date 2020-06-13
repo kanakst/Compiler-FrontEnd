@@ -26,7 +26,10 @@ public class Lexer{
 	reserve(new Word(Tag.DO, "do"));
 	reserve(new Word(Tag.END, "end"));
 	
-	
+	reserve(new Word(Tag.LEFTBRACKET, "("));
+	reserve(new Word(Tag.RIGHTBRACKET, ")"));
+		
+	    
 	reserve(Operator.assign);
 	reserve(Operator.division);
 	reserve(Operator.mod);

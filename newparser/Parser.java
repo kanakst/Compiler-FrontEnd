@@ -165,7 +165,7 @@ public class Parser {
 	} else if (lookahead.toString().equals(";")) {
 	    return termFirst;
 	}
-	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END){
+	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
 	    return termFirst;
 	}
 	else throw new IOException("in moreterms: Syntax Error");
@@ -217,10 +217,13 @@ public class Parser {
 	else if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {
 	    return factorFirst;
 	}
-	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO ||  lookahead.tag == Tag.END){
+	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO ||  lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
 	    return factorFirst; //???
 	}
-	else throw new IOException("in morefactors() : Syntax Error");
+	else {
+	    //System.out.println(lookahead.toString());
+	    throw new IOException("in morefactors() : Syntax Error");
+	}
     }
 
     public Expr factor() throws IOException {
@@ -241,6 +244,13 @@ public class Parser {
 	    lookahead = lex.scan();
 	    return identifier;
 	    //break; 
+	} else if (lookahead.tag == Tag.LEFTBRACKET) {
+
+	    lookahead = lex.scan();
+	    Expr expr = expr();
+	    match(")");
+	    return expr;
+	    
 	}
 	else throw new IOException ("in factor : Syntax Error");
     }
