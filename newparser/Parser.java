@@ -25,10 +25,9 @@ public class Parser {
    
 
     public void match(String str) throws IOException {
-	System.out.println("match is working on : " + lookahead.toString()); // just checking for "then" ... in stmt()
-	System.out.println("and str in match is : " + str);
+	
 	if (lookahead.toString().equals(str)) {
-	    System.out.println("they matched yeah, scanning for next");
+	   
 	    lookahead  = lex.scan();
 	}
 	else throw new IOException ("in match : Syntax Error!");
@@ -42,18 +41,16 @@ public class Parser {
 	    System.out.println();
 
 	    if (lookahead.toString().equals(";")) {
-		System.out.println("just after matching semicolon");
+		
 		tabs = 0;
 		System.out.println("stmtList size is : " + stmtList.size());
 		lookahead = lex.scan();
 	    }
 	    
-	    // match(";");
-	    //System.out.println("just after matching semicolon");
-	    //tabs = 0;
-	    //System.out.println("stmtList size is : " + stmtList.size());
+	    
 	}
      }
+    
     // change this !!! 
     public Expr Start() throws IOException {
 	
@@ -66,7 +63,6 @@ public class Parser {
     public Stmt stmt() throws IOException {
 
 	if (lookahead.tag == Tag.IF) {
-	    //System.out.println("st IF : ");
 
 	    lookahead = lex.scan();
 
@@ -263,6 +259,9 @@ public class Parser {
 	    match(")");
 	    return expr;
 	    
+	} else if (lookahead == null) {
+	    System.out.println("Null case!");
+	    return null; // should I go for this case though?
 	}
 	else throw new IOException ("in factor : Syntax Error");
     }

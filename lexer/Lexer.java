@@ -52,7 +52,7 @@ public class Lexer{
 		    continue;
 		else if(peek == '\n') {
 		    line++;
-		    return null; // check again this!!!
+		    //return null; // check again this!!!
 		}
 		else break;
 	    }
