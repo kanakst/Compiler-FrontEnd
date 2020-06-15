@@ -44,7 +44,7 @@ public class Parser {
 	while (lookahead != null) {
 	    
 	    Stmt st = stmt();
-	    st.accept(visitor); // this is AST printing functions
+	    st.accept(visitor);    // this is AST printing functions
 	    System.out.println();
 	    
 	    if (lookahead.toString().equals(";")) { 
@@ -55,13 +55,12 @@ public class Parser {
 		
 	    } else if (lookahead.toString().equals("\n")) {
 
-		System.out.println("ggg");
+		System.out.println("stmtList size is : " + stmtList.size());
 		lookahead = null;
 		
-	    }
-	    
+	    }    
 	}
-     }
+    }
 
     public void printList() throws IOException {
 	for(int i = 0; i < stmtList.size(); i++) {
@@ -79,19 +78,20 @@ public class Parser {
 	
     }
 
-    public Stmt stmt() throws IOException {
+    public Stmt stmt() throws IOException { 
+	
 
 	if (lookahead.tag == Tag.IF) {
-
+	    
 	    lookahead = lex.scan();
-
-	    Expr expr = expr(); // ???
-
+	    
+	    Expr expr = expr();
+	    
 	    match("then");
 
-	    lookahead = lex.scan();
-
-	    Stmt stmt = stmt(); // ???????
+	    
+       
+	    Stmt stmt = stmt();
 
 	    Stmt if_stmt = new If(expr, stmt);
 
@@ -100,9 +100,9 @@ public class Parser {
 	    return if_stmt;
  
 	}
+	
 	else if (lookahead.tag == Tag.WHILE) {
-	    //System.out.println("st WHILE : ");
-
+	    
 	    lookahead = lex.scan();
 
 	    Expr expr = expr();
