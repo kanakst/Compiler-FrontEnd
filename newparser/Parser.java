@@ -25,8 +25,10 @@ public class Parser {
    
 
     public void match(String str) throws IOException {
-	//System.out.println(lookahead.toString()); // just checking for "then" ... in stmt()
+	System.out.println("match is working on : " + lookahead.toString()); // just checking for "then" ... in stmt()
+	System.out.println("and str in match is : " + str);
 	if (lookahead.toString().equals(str)) {
+	    System.out.println("they matched yeah, scanning for next");
 	    lookahead  = lex.scan();
 	}
 	else throw new IOException ("in match : Syntax Error!");
@@ -37,9 +39,19 @@ public class Parser {
 	while (lookahead != null) {
 	    Stmt st = stmt();
 	    st.accept(visitor);
-	    match(";");
 	    System.out.println();
-	    tabs = 0;
+
+	    if (lookahead.toString().equals(";")) {
+		System.out.println("just after matching semicolon");
+		tabs = 0;
+		System.out.println("stmtList size is : " + stmtList.size());
+		lookahead = lex.scan();
+	    }
+	    
+	    // match(";");
+	    //System.out.println("just after matching semicolon");
+	    //tabs = 0;
+	    //System.out.println("stmtList size is : " + stmtList.size());
 	}
      }
     // change this !!! 
@@ -162,7 +174,7 @@ public class Parser {
 	    }
 	    Expr e1 = new MinusExpr(termFirst, e2);
 	    return e1;
-	} else if (lookahead.toString().equals(";")) {
+	} else if ( lookahead.toString().equals(";") ||  lookahead.toString().equals("\n")) { //
 	    return termFirst;
 	}
 	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
@@ -211,7 +223,7 @@ public class Parser {
 	    Expr e1 = new ModExpr(factorFirst, e2);
 	    return e1;
 
-	} else if (lookahead.toString().equals(";")) {
+	} else if (lookahead.toString().equals(";") || lookahead.toString().equals("\n")) {
 	    return factorFirst;
 	}
 	else if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {

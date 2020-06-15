@@ -11,21 +11,17 @@ public class Interpreter implements Visitor {
 	}
     }
     public void visit(TimesExpr n) {
-	//System.out.println("*");
-	//n.e1.accept(this);
-	//n.e2.accept(this);
 
 	System.out.println("*");
 
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
 	
-	
-	//System.out.println();
 	printTabs(localtabs);
 	n.e1.accept(this);
 
 	System.out.println();
+
 	printTabs(localtabs);
 	n.e2.accept(this);
 
@@ -33,17 +29,13 @@ public class Interpreter implements Visitor {
     }
 
     public void visit(DivideExpr n) {
-	//System.out.println("/");
-	//n.e1.accept(this);
-	//n.e2.accept(this);
+	
 
 	System.out.println("/");
 
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
 	
-	
-	//System.out.println();
 	printTabs(localtabs);
 	n.e1.accept(this);
 
@@ -55,21 +47,18 @@ public class Interpreter implements Visitor {
     }
 
     public void visit(ModExpr n) {
-	//System.out.println("mod");
-	//n.e1.accept(this);
-	//n.e2.accept(this);
+        
 
-	System.out.println("mod");
+	System.out.println("Mod");
 
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
 	
-	
-	//System.out.println();
 	printTabs(localtabs);
 	n.e1.accept(this);
-
+	
 	System.out.println();
+	
 	printTabs(localtabs);
 	n.e2.accept(this);
 
@@ -84,12 +73,11 @@ public class Interpreter implements Visitor {
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
 	
-	
-	//System.out.println();
 	printTabs(localtabs);
 	n.e1.accept(this);
 
 	System.out.println();
+
 	printTabs(localtabs);
 	n.e2.accept(this);
 
@@ -97,21 +85,19 @@ public class Interpreter implements Visitor {
     }
 
     public void visit(MinusExpr n) {
-	//System.out.println("-");
-	//n.e1.accept(this);
-	//n.e2.accept(this);
-
+        
 	System.out.println("-");
 
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
 	
 	
-	//System.out.println();
+	
 	printTabs(localtabs);
 	n.e1.accept(this);
 
 	System.out.println();
+
 	printTabs(localtabs);
 	n.e2.accept(this);
 
@@ -120,19 +106,15 @@ public class Interpreter implements Visitor {
     }
 
     public void visit(Identifier n) {
-	//System.out.println();
-	//printTabs(Parser.tabs);
+	
 	System.out.print(n.name);
-	//return n.accept(this);
-	//n.token.tag; 
+        
     }
 
     public void visit(Numerical n) {
-	//System.out.println();
-	//printTabs(Parser.tabs);
-	System.out.print(n.value);
-	//return n.accept(this);
-	//n.value; // hmmmmmm FIX THIS!
+	
+       	System.out.print(n.value);
+	
     }
 
     public void visit(Assign n) {
@@ -142,16 +124,17 @@ public class Interpreter implements Visitor {
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
 
-	//System.out.println();
+
 	printTabs(localtabs);
-        n.id.accept(this); // is it like this???
+        n.id.accept(this);
 
 	System.out.println();
+	
 	printTabs(localtabs);
 	n.expr.accept(this);
 
 	--Parser.tabs;
-	//return 0;
+	
     }
 
     public void visit(If n) {
@@ -160,36 +143,30 @@ public class Interpreter implements Visitor {
 	
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
-
-	//printTabs(localtabs);
-	//System.out.println();
+	
 	printTabs(localtabs);
 	n.expr.accept(this);
 
 	System.out.println();
+
 	printTabs(localtabs);
 	n.stmt.accept(this);
 
 	--Parser.tabs;
-	//return 0; // ???
+	
     }
     public void visit(While n) {
-	//System.out.println("While");
-	//n.expr.accept(this);
-	//n.stmt.accept(this);
-	//return 0;
-
+	
 	System.out.println("While");
 	
 	++Parser.tabs;
 	int localtabs = Parser.tabs;
 
-	//printTabs(localtabs);
-	//System.out.println();
-	printTabs(localtabs);
+       	printTabs(localtabs);
 	n.expr.accept(this);
 
 	System.out.println();
+
 	printTabs(localtabs);
 	n.stmt.accept(this);
 
