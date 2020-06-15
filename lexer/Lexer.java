@@ -52,6 +52,8 @@ public class Lexer{
 		    continue;
 		else if(peek == '\n') {
 		    line++;
+		    Token t = new Token(peek);
+		    return t;
 		    //return null; // check again this!!!
 		}
 		else break;

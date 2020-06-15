@@ -13,6 +13,8 @@ public class Main{
 	Parser myparser = new Parser(mylexer);
 	
 	myparser.parse();
+	//System.out.println("printing stmtlist: ");
+	//myparser.printList();
 	
     }
 }

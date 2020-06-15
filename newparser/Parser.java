@@ -15,14 +15,17 @@ public class Parser {
     public Interpreter visitor = new Interpreter(); //is this gonna work?
 
     public List<Stmt> stmtList = new ArrayList<Stmt>();
+    public List<Stmt> opt_stmts = new ArrayList<Stmt>();
+
     public int currIndex = 0;
     public static int tabs = 0;
+
+    public int beginIndex = 0;
+    public int endIndex = 0;
     
     public Parser(Lexer lexer) {
 	lex = lexer;
     }
-
-   
 
     public void match(String str) throws IOException {
 	
@@ -30,26 +33,42 @@ public class Parser {
 	   
 	    lookahead  = lex.scan();
 	}
+
 	else throw new IOException ("in match : Syntax Error!");
     }
 
     public void parse() throws IOException {
+	
 	lookahead = lex.scan();
-	while (lookahead != null) {
-	    Stmt st = stmt();
-	    st.accept(visitor);
-	    System.out.println();
 
-	    if (lookahead.toString().equals(";")) {
+	while (lookahead != null) {
+	    
+	    Stmt st = stmt();
+	    st.accept(visitor); // this is AST printing functions
+	    System.out.println();
+	    
+	    if (lookahead.toString().equals(";")) { 
 		
 		tabs = 0;
 		System.out.println("stmtList size is : " + stmtList.size());
 		lookahead = lex.scan();
+		
+	    } else if (lookahead.toString().equals("\n")) {
+
+		System.out.println("ggg");
+		lookahead = null;
+		
 	    }
-	    
 	    
 	}
      }
+
+    public void printList() throws IOException {
+	for(int i = 0; i < stmtList.size(); i++) {
+	    stmtList.get(i).accept(visitor);
+	    System.out.println();
+	}
+    }
     
     // change this !!! 
     public Expr Start() throws IOException {
@@ -68,7 +87,9 @@ public class Parser {
 
 	    Expr expr = expr(); // ???
 
-	    match("then"); /////////////////////// ?????????
+	    match("then");
+
+	    lookahead = lex.scan();
 
 	    Stmt stmt = stmt(); // ???????
 
@@ -78,7 +99,8 @@ public class Parser {
 	    
 	    return if_stmt;
  
-	} else if (lookahead.tag == Tag.WHILE) {
+	}
+	else if (lookahead.tag == Tag.WHILE) {
 	    //System.out.println("st WHILE : ");
 
 	    lookahead = lex.scan();
@@ -96,62 +118,64 @@ public class Parser {
 	    return while_stmt;
 
 	    
-	} else if (lookahead.tag == Tag.BEGIN) {
-	    //System.out.println("st BEGIN : ");
+	}
+	else if (lookahead.tag == Tag.BEGIN) {
 
+	    beginIndex = stmtList.size();
+	    //System.out.println("beginIndex is : " + beginIndex);
+	    
 	    lookahead = lex.scan();
-	    //continue;
-	    
-	    Stmt stmt = stmt();
-	    //stmt.accept(visitor);
+      	    lookahead = lex.scan();
+	    Stmt stmt = stmt(); // only one statement
+	    lookahead = lex.scan();
 	    match("end");
-	    return stmt;
-	   
-	    
-	    //return stmt;
-	    
-	} else if (lookahead.tag == Tag.ID) { 
-	    
-	    // System.out.println("st IDENTIFIER/WORD : ");
 
+	    endIndex = stmtList.size();
+	    //System.out.println("endIndex is : " + endIndex);
+
+	    return stmt;
+	          
+	}
+	else if (lookahead.tag == Tag.ID) { 
+         	
 	    Identifier id = new Identifier(lookahead);
        
 	    lookahead = lex.scan();
 
 	    if (lookahead.tag == Tag.ASSIGN) {
-		
+	
 		lookahead = lex.scan();
 		
 		Expr expr = expr();
-		
+	  	
 		Stmt stmt = new Assign(id, expr);
-
-		//do I need to add this to stmt list?
-		// and return void?
+		
 		stmtList.add(stmt);
 		
 		return stmt;
-		
-		
+
 	    } else throw new IOException ("in stmt() in Tag.ID : Syntax Error");
+
+	} else if (lookahead.toString().equals('\n')) {
+
+	    return null;
 	    
 	} else throw new IOException ("in stmt() : Syntax Error");
     
-	//return null; // SHOULD BE CHANGED!!!
-	
 	
     }
 
     public Expr expr() throws IOException {
 	
 	Expr term1 = term();
+	
 	Expr terms = moreterms(term1);
+	
 	return terms;
   
     }
     
     public Expr moreterms(Expr termFirst) throws IOException {
-	
 	if (lookahead.tag == Tag.PLUSSIGN) {
 	    lookahead = lex.scan();
 	    Expr termSecond = term();
@@ -170,7 +194,11 @@ public class Parser {
 	    }
 	    Expr e1 = new MinusExpr(termFirst, e2);
 	    return e1;
-	} else if ( lookahead.toString().equals(";") ||  lookahead.toString().equals("\n")) { //
+	} else if ( lookahead.toString().equals(";") ) { //
+	    return termFirst;
+	}
+	else if (lookahead.toString().equals("\n")) {
+	    
 	    return termFirst;
 	}
 	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
@@ -182,7 +210,7 @@ public class Parser {
     public Expr term() throws IOException {
 	
 	Expr factor1 = factor();
-
+	
 	Expr factors = morefactors(factor1);
 	
 	return factors;
@@ -190,7 +218,7 @@ public class Parser {
     }
 
     public Expr morefactors(Expr factorFirst) throws IOException {
-	//System.out.println(lookahead.tag);
+	
 	if (lookahead.tag == Tag.MULTIPLYSIGN) {
 	    lookahead = lex.scan();
 	    Expr factorSecond = factor();
@@ -219,17 +247,20 @@ public class Parser {
 	    Expr e1 = new ModExpr(factorFirst, e2);
 	    return e1;
 
-	} else if (lookahead.toString().equals(";") || lookahead.toString().equals("\n")) {
+	} else if (lookahead.toString().equals(";") ) {
 	    return factorFirst;
-	}
-	else if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {
+	} else if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {
 	    return factorFirst;
-	}
-	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO ||  lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
-	    return factorFirst; //???
-	}
-	else {
-	    //gitSystem.out.println(lookahead.toString());
+	} else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO ||  lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
+	    return factorFirst; 
+	
+
+	} else if (lookahead.toString().equals("\n")) {
+	    
+	    return factorFirst;
+	    
+	} else {
+	    
 	    throw new IOException("in morefactors() : Syntax Error");
 	}
     }
@@ -237,21 +268,19 @@ public class Parser {
     public Expr factor() throws IOException {
 	
 	if (lookahead.tag == Tag.NUM) {
-	    //emit (NUM, tokenval);
+	    
 	    Numerical numerical = new Numerical(lookahead);
 	    lookahead = lex.scan();
-	    return numerical; // ???
+	   
+	    return numerical; 
 	    
 	    
 	} else if (lookahead.tag == Tag.ID) {
-	    // emit (ID, tokenval);
-	    // how to match in here?
-
-	    //match and break
+	    
 	    Identifier identifier = new Identifier(lookahead);
 	    lookahead = lex.scan();
 	    return identifier;
-	    //break; 
+	     
 	} else if (lookahead.tag == Tag.LEFTBRACKET) {
 
 	    lookahead = lex.scan();
@@ -259,9 +288,7 @@ public class Parser {
 	    match(")");
 	    return expr;
 	    
-	} else if (lookahead == null) {
-	    System.out.println("Null case!");
-	    return null; // should I go for this case though?
+	   
 	}
 	else throw new IOException ("in factor : Syntax Error");
     }
