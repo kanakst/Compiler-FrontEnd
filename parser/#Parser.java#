@@ -101,7 +101,6 @@ public class Parser {
     }
 
     public Expr factor() throws IOException {
-
         if (tokenType.equals("Word") || tokenType.equals("Num")) {
 
             Expr factor = new Expr(lookahead);

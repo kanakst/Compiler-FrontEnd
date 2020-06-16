@@ -24,273 +24,303 @@ public class Parser {
     public int endIndex = 0;
     
     public Parser(Lexer lexer) {
-	lex = lexer;
+        lex = lexer;
     }
-
+    
     public void match(String str) throws IOException {
-	
-	if (lookahead.toString().equals(str)) {
-	   
-	    lookahead  = lex.scan();
-	}
+        
+        if (lookahead.toString().equals(str)) {
+           
+            lookahead  = lex.scan();
+        }
 
-	else throw new IOException ("in match : Syntax Error!");
+        else throw new IOException ("in match : Syntax Error!");
     }
 
     public void parse() throws IOException {
-	
-	lookahead = lex.scan();
+        
+        lookahead = lex.scan();
 
-	while (lookahead != null) {
+        while (lookahead != null) {
+
 	    
-	    Stmt st = stmt();
-	    st.accept(visitor);    // this is AST printing functions
-	    System.out.println();
-	    
-	    if (lookahead.toString().equals(";")) { 
-		
-		tabs = 0;
-		System.out.println("stmtList size is : " + stmtList.size());
+            Stmt st = stmt();
+	    while(st == null) {
 		lookahead = lex.scan();
-		
-	    } else if (lookahead.toString().equals("\n")) {
+		st = stmt();
+	    }
+            //st.accept(visitor);    // this is AST printing functions
+            System.out.println();
+            
+            if (lookahead.toString().equals(";")) { 
+                
+                tabs = 0;
+                System.out.println("stmtList size is : " + stmtList.size());
+		System.out.println();
+                lookahead = lex.scan();
+                
+            } else if (lookahead.toString().equals("\n")) {
 
-		System.out.println("stmtList size is : " + stmtList.size());
-		lookahead = null;
-		
-	    }    
-	}
+		System.out.println("When new line");
+                System.out.println("stmtList size is : " + stmtList.size());
+		lookahead = null;   
+            }
+
+	    
+            
+            
+        }
     }
 
     public void printList() throws IOException {
-	for(int i = 0; i < stmtList.size(); i++) {
-	    stmtList.get(i).accept(visitor);
-	    System.out.println();
-	}
+        for(int i = 0; i < stmtList.size(); i++) {
+            stmtList.get(i).accept(visitor);
+            System.out.println();
+        }
     }
     
-    // change this !!! 
     public Expr Start() throws IOException {
-	
-	Expr e;
-	e = expr();
-	return e;
-	
+        
+        Expr e;
+        e = expr();
+        return e;
+        
     }
 
     public Stmt stmt() throws IOException { 
-	
+        
 
-	if (lookahead.tag == Tag.IF) {
-	    
-	    lookahead = lex.scan();
-	    
-	    Expr expr = expr();
-	    
-	    match("then");
+        if (lookahead.tag == Tag.IF) {
+            
+            lookahead = lex.scan();
+            
+            Expr expr = expr();
+                
+            match("then");
+           
+            Stmt stmt = stmt();
+            
+            while(stmt == null) {
+                lookahead = lex.scan();
+                stmt = stmt();
+            }
 
-	    
-       
-	    Stmt stmt = stmt();
-
-	    Stmt if_stmt = new If(expr, stmt);
-
-	    stmtList.add(if_stmt);
-	    
-	    return if_stmt;
+            Stmt if_stmt = new If(expr, stmt);
+           
+            stmtList.add(if_stmt);
+            
+            return if_stmt;
  
-	}
-	
-	else if (lookahead.tag == Tag.WHILE) {
-	    
-	    lookahead = lex.scan();
+        }
+        
+        else if (lookahead.tag == Tag.WHILE) {
+            
+            lookahead = lex.scan();
 
-	    Expr expr = expr();
+            Expr expr = expr();
 
-	    match("do");
+            match("do");
 
-	    Stmt stmt = stmt();
+            Stmt stmt = stmt();
 
-	    Stmt while_stmt = new While(expr, stmt);
+            while(stmt == null) {
+                lookahead = lex.scan();
+                stmt = stmt();
+            }
+            
+            Stmt while_stmt = new While(expr, stmt);
 
-	    stmtList.add(while_stmt);
+            stmtList.add(while_stmt);
 
-	    return while_stmt;
+            return while_stmt;
 
-	    
-	}
-	else if (lookahead.tag == Tag.BEGIN) {
+            
+        }
+        else if (lookahead.tag == Tag.BEGIN) {
 
-	    beginIndex = stmtList.size();
-	    //System.out.println("beginIndex is : " + beginIndex);
-	    
-	    lookahead = lex.scan();
-      	    lookahead = lex.scan();
-	    Stmt stmt = stmt(); // only one statement
-	    lookahead = lex.scan();
-	    match("end");
+            beginIndex = stmtList.size();
+            
+            
+            lookahead = lex.scan();
+     
+            Stmt stmt = stmt(); // only one statement
 
-	    endIndex = stmtList.size();
-	    //System.out.println("endIndex is : " + endIndex);
-
-	    return stmt;
-	          
-	}
-	else if (lookahead.tag == Tag.ID) { 
-         	
-	    Identifier id = new Identifier(lookahead);
-       
-	    lookahead = lex.scan();
-
-	    if (lookahead.tag == Tag.ASSIGN) {
-	
+	    while(stmt == null) {
 		lookahead = lex.scan();
-		
-		Expr expr = expr();
-	  	
-		Stmt stmt = new Assign(id, expr);
-		
-		stmtList.add(stmt);
-		
-		return stmt;
+		stmt = stmt();
+	    }
 
-	    } else throw new IOException ("in stmt() in Tag.ID : Syntax Error");
+	    while (lookahead.tag != Tag.END) {
+		lookahead = lex.scan();
+	    }
+            match("end");
 
-	} else if (lookahead.toString().equals('\n')) {
+            endIndex = stmtList.size();
+            
 
-	    return null;
-	    
-	} else throw new IOException ("in stmt() : Syntax Error");
+            return stmt;
+                  
+        }
+        else if (lookahead.tag == Tag.ID) { 
+            ;
+            Identifier id = new Identifier(lookahead);
+       
+            lookahead = lex.scan();
+
+            if (lookahead.tag == Tag.ASSIGN) {
+        
+                lookahead = lex.scan();
+                
+                Expr expr = expr();
+                
+                Stmt stmt = new Assign(id, expr);
+                
+                stmtList.add(stmt);
+                
+                return stmt;
+
+            } else throw new IOException ("in stmt() in Tag.ID : Syntax Error");
+
+        } else if (lookahead.toString().equals("\n")) {
+
+            return null;
+            
+        } else throw new IOException ("in stmt() : Syntax Error");
     
-	
+        
     }
 
     public Expr expr() throws IOException {
-	
-	Expr term1 = term();
-	
-	Expr terms = moreterms(term1);
-	
-	return terms;
+        
+        Expr term1 = term();
+        
+        Expr terms = moreterms(term1);
+        
+        return terms;
   
     }
     
     public Expr moreterms(Expr termFirst) throws IOException {
-	if (lookahead.tag == Tag.PLUSSIGN) {
-	    lookahead = lex.scan();
-	    Expr termSecond = term();
-	    Expr e2 = moreterms(termSecond);
-	    if (e2 == null) {
-		e2 = termSecond;
-	    }
-	    Expr e1 = new PlusExpr(termFirst, e2);
-	    return e1;
-	} else if(lookahead.tag == Tag.MINUSSIGN) {
-	    lookahead = lex.scan();
-	    Expr termSecond = term();
-	    Expr e2 = moreterms(termSecond);
-	    if (e2 == null) {
-		e2 = termSecond;
-	    }
-	    Expr e1 = new MinusExpr(termFirst, e2);
-	    return e1;
-	} else if ( lookahead.toString().equals(";") ) { //
-	    return termFirst;
-	}
-	else if (lookahead.toString().equals("\n")) {
-	    
-	    return termFirst;
-	}
-	else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
-	    return termFirst;
-	}
-	else throw new IOException("in moreterms: Syntax Error");
+        
+        if (lookahead.tag == Tag.PLUSSIGN) {
+
+            lookahead = lex.scan();
+            Expr termSecond = term();
+            Expr e2 = moreterms(termSecond);
+
+            if (e2 == null) {
+                e2 = termSecond;
+            }
+
+            Expr e1 = new PlusExpr(termFirst, e2);
+            return e1;
+
+        } else if(lookahead.tag == Tag.MINUSSIGN) {
+            lookahead = lex.scan();
+            Expr termSecond = term();
+            Expr e2 = moreterms(termSecond);
+            if (e2 == null) {
+                e2 = termSecond;
+            }
+            Expr e1 = new MinusExpr(termFirst, e2);
+            return e1;
+        } else if ( lookahead.toString().equals(";") ) { 
+            return termFirst;
+        }
+        else if (lookahead.toString().equals("\n")) {
+            
+            return termFirst;
+        }
+        else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
+            return termFirst;
+        }
+        else throw new IOException("in moreterms: Syntax Error");
     }
 
     public Expr term() throws IOException {
-	
-	Expr factor1 = factor();
-	
-	Expr factors = morefactors(factor1);
-	
-	return factors;
+        
+        Expr factor1 = factor();
+        
+        Expr factors = morefactors(factor1);
+        
+        return factors;
 
     }
 
     public Expr morefactors(Expr factorFirst) throws IOException {
-	
-	if (lookahead.tag == Tag.MULTIPLYSIGN) {
-	    lookahead = lex.scan();
-	    Expr factorSecond = factor();
-	    Expr e2 = morefactors(factorSecond);
-	    if(e2 == null) {
-		e2 = factorSecond;
-	    }
-	    Expr e1 = new TimesExpr(factorFirst, e2);
-	    return e1;
-	} else if (lookahead.tag == Tag.DIVIDESIGN || lookahead.tag == Tag.DIVISION ) {
-	    lookahead = lex.scan();
-	    Expr factorSecond = factor();
-	    Expr e2 = morefactors(factorSecond);
-	    if(e2 == null) {
-		e2 = factorSecond;
-	    }
-	    Expr e1 = new DivideExpr(factorFirst, e2);
-	    return e1;
-	} else if (lookahead.tag == Tag.MOD) {
-	    lookahead = lex.scan();
-	    Expr factorSecond = factor();
-	    Expr e2 = morefactors(factorSecond);
-	    if (e2 == null) {
-		e2 = factorSecond;
-	    }
-	    Expr e1 = new ModExpr(factorFirst, e2);
-	    return e1;
+        
+        if (lookahead.tag == Tag.MULTIPLYSIGN) {
+            lookahead = lex.scan();
+            Expr factorSecond = factor();
+            Expr e2 = morefactors(factorSecond);
+            if(e2 == null) {
+                e2 = factorSecond;
+            }
+            Expr e1 = new TimesExpr(factorFirst, e2);
+            return e1;
+        } else if (lookahead.tag == Tag.DIVIDESIGN || lookahead.tag == Tag.DIVISION ) {
+            lookahead = lex.scan();
+            Expr factorSecond = factor();
+            Expr e2 = morefactors(factorSecond);
+            if(e2 == null) {
+                e2 = factorSecond;
+            }
+            Expr e1 = new DivideExpr(factorFirst, e2);
+            return e1;
+        } else if (lookahead.tag == Tag.MOD) {
+            lookahead = lex.scan();
+            Expr factorSecond = factor();
+            Expr e2 = morefactors(factorSecond);
+            if (e2 == null) {
+                e2 = factorSecond;
+            }
+            Expr e1 = new ModExpr(factorFirst, e2);
+            return e1;
 
-	} else if (lookahead.toString().equals(";") ) {
-	    return factorFirst;
-	} else if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {
-	    return factorFirst;
-	} else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO ||  lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
-	    return factorFirst; 
-	
+        } else if (lookahead.toString().equals(";") ) {
+            return factorFirst;
+        } else if (lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN) {
+            return factorFirst;
+        } else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO ||  lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
+            return factorFirst; 
+        
 
-	} else if (lookahead.toString().equals("\n")) {
-	    
-	    return factorFirst;
-	    
-	} else {
-	    
-	    throw new IOException("in morefactors() : Syntax Error");
-	}
+        } else if (lookahead.toString().equals("\n")) {
+            
+            return factorFirst;
+            
+        } else {
+            
+            throw new IOException("in morefactors() : Syntax Error");
+        }
     }
 
     public Expr factor() throws IOException {
-	
-	if (lookahead.tag == Tag.NUM) {
-	    
-	    Numerical numerical = new Numerical(lookahead);
-	    lookahead = lex.scan();
-	   
-	    return numerical; 
-	    
-	    
-	} else if (lookahead.tag == Tag.ID) {
-	    
-	    Identifier identifier = new Identifier(lookahead);
-	    lookahead = lex.scan();
-	    return identifier;
-	     
-	} else if (lookahead.tag == Tag.LEFTBRACKET) {
+        
+        if (lookahead.tag == Tag.NUM) {
+            
+            Numerical numerical = new Numerical(lookahead);
+            lookahead = lex.scan();
+           
+            return numerical; 
+            
+            
+        } else if (lookahead.tag == Tag.ID) {
+            
+            Identifier identifier = new Identifier(lookahead);
+            lookahead = lex.scan();
+            return identifier;
+             
+        } else if (lookahead.tag == Tag.LEFTBRACKET) {
 
-	    lookahead = lex.scan();
-	    Expr expr = expr();
-	    match(")");
-	    return expr;
-	    
-	   
-	}
-	else throw new IOException ("in factor : Syntax Error");
+            lookahead = lex.scan();
+            Expr expr = expr();
+            match(")");
+            return expr;
+            
+           
+        }
+        else throw new IOException ("in factor : Syntax Error");
     }
 
     
