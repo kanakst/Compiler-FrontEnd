@@ -20,9 +20,7 @@ public class Parser {
     public int currIndex = 0;
     public static int tabs = 0;
 
-    public int beginIndex = 0;
-    public int endIndex = 0;
-    
+       
     public Parser(Lexer lexer) {
         lex = lexer;
     }
@@ -38,37 +36,33 @@ public class Parser {
     }
 
     public void parse() throws IOException {
-        
-        lookahead = lex.scan();
+                
+            lookahead = lex.scan();
 
         while (lookahead != null) {
 
 	    
             Stmt st = stmt();
-	    while(st == null) {
-		lookahead = lex.scan();
-		st = stmt();
-	    }
-            //st.accept(visitor);    // this is AST printing functions
+            while(st == null) {
+                lookahead = lex.scan();
+                st = stmt();
+            }
+            st.accept(visitor);    // this is AST printing functions
             System.out.println();
             
             if (lookahead.toString().equals(";")) { 
                 
                 tabs = 0;
                 System.out.println("stmtList size is : " + stmtList.size());
-		System.out.println();
+                System.out.println();
                 lookahead = lex.scan();
                 
             } else if (lookahead.toString().equals("\n")) {
 
-		System.out.println("When new line");
+                System.out.println("When new line");
                 System.out.println("stmtList size is : " + stmtList.size());
-		lookahead = null;   
+                lookahead = null;   
             }
-
-	    
-            
-            
         }
     }
 
@@ -104,7 +98,7 @@ public class Parser {
                 lookahead = lex.scan();
                 stmt = stmt();
             }
-
+            
             Stmt if_stmt = new If(expr, stmt);
            
             stmtList.add(if_stmt);
@@ -123,7 +117,7 @@ public class Parser {
 
             Stmt stmt = stmt();
 
-            while(stmt == null) {
+            while (stmt == null) {
                 lookahead = lex.scan();
                 stmt = stmt();
             }
@@ -136,33 +130,116 @@ public class Parser {
 
             
         }
-        else if (lookahead.tag == Tag.BEGIN) {
+        /*
+          else if (lookahead.tag == Tag.BEGIN) {
 
-            beginIndex = stmtList.size();
+          //beginIndex = stmtList.size(); // but there can be several begin ... end statements
+          // need to do local , and track locally
             
+          //List<Stmt> localStmtList = new ArrayList<Stmt>();
+
+          //tabs++;
+            
+          lookahead = lex.scan();
+     
+          Stmt stmt = stmt(); // only one statement but should be able to contain multiple
+
+          while (stmt == null) {
+          lookahead = lex.scan();
+          stmt = stmt();
+          }
+
+          // opt_stmts.add(stmt)
+            
+          while (lookahead.tag != Tag.END) {
+          lookahead = lex.scan();
+          }
+            
+          match("end");
+
+          //endIndex = stmtList.size();
+            
+
+          return stmt;
+                  
+          }
+        */
+        else if (lookahead.tag == Tag.BEGIN) {
+            // IMPORTANT!!!
+            // there are 3 possible cases:
+
+            // 1. null case , when there is no statement between BEGIN and END
+
+            // 2. one stmt case ending with '\n', only one stmt
+
+            // 3. multiple stmts each separated with ';' and the last one
+            // ending with '\n' .
             
             lookahead = lex.scan();
-     
-            Stmt stmt = stmt(); // only one statement
 
-	    while(stmt == null) {
-		lookahead = lex.scan();
-		stmt = stmt();
-	    }
+            Stmt stmt = stmt();
+            
+            while (stmt == null) {
 
-	    while (lookahead.tag != Tag.END) {
-		lookahead = lex.scan();
-	    }
-            match("end");
+                lookahead = lex.scan();
+                if (lookahead.tag == Tag.END) { // null statement case!
+                    System.out.println("Null stmt case in BEGIN -END block");
+                    stmt = null;
+                    return stmt; //orr maybe even return!!!
+                }
+                
+                stmt = stmt();
+            }
 
-            endIndex = stmtList.size();
+            List<Stmt> opt_stmts = new ArrayList<Stmt>();
+            opt_stmts.add(stmt);
+            // if it reached this point, now only 2 cases: one or mulitple stmts;
+
+            // one stmt case  : 
+            // do I need to while loop in order to find this '\n' ???           
+
+            if (lookahead.toString().equals("\n")) {
+                
+                System.out.println("One stmt case in BEGIN - END block, didn't match END yet");
+
+                lookahead = lex.scan();
+                    
+                while (lookahead != null) {
+                    if (lookahead.tag == Tag.END) {
+                        System.out.println( "One stmt case in BEGIN - END block, matched END!!!" );
+                        stmtList.add(stmt);
+                        return new Block(stmt);
+                    } else if (lookahead.toString().equals("\n")) {
+                        lookahead = lex.scan();
+                    } else throw new IOException("Syntax error in Begin-End : DID NOT MATCH END!!!");
+                }
+
+                
+                return new Block(stmt);
+            }
+
+            // multiple statement case :
+            
+            else if (lookahead.toString().equals(";")) { 
+
+                lookaheaad = lex.scan();
+
+                Stmt stmt = stmt();
+                while (stmt == null) {
+                    lookahead = lex.scan();
+                    stmt = stmt();
+                }
+                    
+                
+                
+            } 
             
 
-            return stmt;
-                  
-        }
-        else if (lookahead.tag == Tag.ID) { 
-            ;
+            
+
+            
+        } else if (lookahead.tag == Tag.ID) { 
+            
             Identifier id = new Identifier(lookahead);
        
             lookahead = lex.scan();

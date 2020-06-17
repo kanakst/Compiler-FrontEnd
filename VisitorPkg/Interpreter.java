@@ -6,172 +6,178 @@ import newparser.*;
 
 public class Interpreter implements Visitor {
     public void printTabs(int tabsNum) {
-	for(int i = 0; i < tabsNum; i++) {
-	    System.out.print("   ");
-	}
+        for (int i = 0; i < tabsNum; i++) {
+            System.out.print("   ");
+        }
     }
+
     public void visit(TimesExpr n) {
 
-	System.out.println("*");
+        System.out.println("*");
 
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
-	
-	printTabs(localtabs);
-	n.e1.accept(this);
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-	System.out.println();
+        printTabs(localtabs);
+        n.e1.accept(this);
 
-	printTabs(localtabs);
-	n.e2.accept(this);
+        System.out.println();
 
-	--Parser.tabs;
+        printTabs(localtabs);
+        n.e2.accept(this);
+
+        --Parser.tabs;
     }
 
     public void visit(DivideExpr n) {
-	
 
-	System.out.println("/");
+        System.out.println("/");
 
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
-	
-	printTabs(localtabs);
-	n.e1.accept(this);
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-	System.out.println();
-	printTabs(localtabs);
-	n.e2.accept(this);
+        printTabs(localtabs);
+        n.e1.accept(this);
 
-	--Parser.tabs;
+        System.out.println();
+        printTabs(localtabs);
+        n.e2.accept(this);
+
+        --Parser.tabs;
     }
 
     public void visit(ModExpr n) {
-        
 
-	System.out.println("Mod");
+        System.out.println("Mod");
 
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
-	
-	printTabs(localtabs);
-	n.e1.accept(this);
-	
-	System.out.println();
-	
-	printTabs(localtabs);
-	n.e2.accept(this);
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-	--Parser.tabs;
+        printTabs(localtabs);
+        n.e1.accept(this);
+
+        System.out.println();
+
+        printTabs(localtabs);
+        n.e2.accept(this);
+
+        --Parser.tabs;
     }
 
     public void visit(PlusExpr n) {
 
+        System.out.println("+");
 
-	System.out.println("+");
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
-	
-	printTabs(localtabs);
-	n.e1.accept(this);
+        printTabs(localtabs);
+        n.e1.accept(this);
 
-	System.out.println();
+        System.out.println();
 
-	printTabs(localtabs);
-	n.e2.accept(this);
+        printTabs(localtabs);
+        n.e2.accept(this);
 
-	--Parser.tabs;
+        --Parser.tabs;
     }
 
     public void visit(MinusExpr n) {
-        
-	System.out.println("-");
 
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
-	
-	
-	
-	printTabs(localtabs);
-	n.e1.accept(this);
+        System.out.println("-");
 
-	System.out.println();
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-	printTabs(localtabs);
-	n.e2.accept(this);
+        printTabs(localtabs);
+        n.e1.accept(this);
 
-	--Parser.tabs;
-	
+        System.out.println();
+
+        printTabs(localtabs);
+        n.e2.accept(this);
+
+        --Parser.tabs;
+
     }
 
     public void visit(Identifier n) {
-	
-	System.out.print(n.name);
-        
+
+        System.out.print(n.name);
+
     }
 
     public void visit(Numerical n) {
-	
-       	System.out.print(n.value);
-	
+
+        System.out.print(n.value);
+
     }
 
     public void visit(Assign n) {
 
-	System.out.println("Assign");
+        System.out.println("Assign");
 
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-
-	printTabs(localtabs);
+        printTabs(localtabs);
         n.id.accept(this);
 
-	System.out.println();
-	
-	printTabs(localtabs);
-	n.expr.accept(this);
+        System.out.println();
 
-	--Parser.tabs;
-	
+        printTabs(localtabs);
+        n.expr.accept(this);
+
+        --Parser.tabs;
+
     }
 
     public void visit(If n) {
-	
-	System.out.println("If");
-	
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
-	
-	printTabs(localtabs);
-	n.expr.accept(this);
 
-	System.out.println();
+        System.out.println("If");
 
-	printTabs(localtabs);
-	n.stmt.accept(this);
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-	--Parser.tabs;
-	
+        printTabs(localtabs);
+        n.expr.accept(this);
+
+        System.out.println();
+
+        printTabs(localtabs);
+        n.stmt.accept(this);
+
+        --Parser.tabs;
+
     }
+
     public void visit(While n) {
-	
-	System.out.println("While");
-	
-	++Parser.tabs;
-	int localtabs = Parser.tabs;
 
-       	printTabs(localtabs);
-	n.expr.accept(this);
+        System.out.println("While");
 
-	System.out.println();
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
 
-	printTabs(localtabs);
-	n.stmt.accept(this);
+        printTabs(localtabs);
+        n.expr.accept(this);
 
-	--Parser.tabs;
-	
+        System.out.println();
+
+        printTabs(localtabs);
+        n.stmt.accept(this);
+
+        --Parser.tabs;
+
     }
-    
+
+    public void visit(Block n) {
+
+        System.out.println("Begin of Block");
+        ++Parser.tabs; // rethink this one, as should be same for block members
+        int localtabs = Parser.tabs;
+
+        printTabs(localtabs);
+        n.firstStmt.accept(this);
+
+        System.out.println();
 }
