@@ -2,12 +2,16 @@ package newAST;
 
 import VisitorPkg.*;
 
+import java.util.*;
+
 public class Block extends Stmt {
 
-    public Stmt firstStmt;
-
-    public Block(Stmt a) {
-        firstStmt = a; // ?????????
+    
+    public List<Stmt> blockStmtList; // = new ArrayList<Stmt>();
+    public Block(List<Stmt> list ) {
+         
+         blockStmtList = new ArrayList<>(list);
+         
     }
 
     public void accept(Visitor v) {

@@ -233,7 +233,7 @@ public class Parser {
             lookahead = lex.scan();
             
             if (lookahead.tag == Tag.END) { // null statement case!
-                    System.out.println("Null stmt case in BEGIN -END block");
+                //System.out.println("Null stmt case in BEGIN -END block");
                     lookahead = lex.scan();
                     return new Block(opt_stmts); //or maybe even return!!!
             }

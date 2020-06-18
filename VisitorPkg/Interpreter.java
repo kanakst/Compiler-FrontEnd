@@ -172,12 +172,22 @@ public class Interpreter implements Visitor {
 
     public void visit(Block n) {
 
-        System.out.println("Begin of Block");
+        System.out.println("{");
         ++Parser.tabs; // rethink this one, as should be same for block members
         int localtabs = Parser.tabs;
 
-        printTabs(localtabs);
-        n.firstStmt.accept(this);
-
-        System.out.println();
+        if (n.blockStmtList.size() == 0) {
+            //System.out.println("Visitor/Interpreter/block:null case!");
+            //return;
+        }
+        
+        for (int i = 0; i < n.blockStmtList.size(); i++ ) {
+            printTabs(localtabs);
+            n.blockStmtList.get(i).accept(this);
+            System.out.println();
+        }
+        //--Parser.tabs;
+        printTabs(localtabs-1);
+        System.out.println("}");
+    }
 }

@@ -1,16 +1,43 @@
-if 1 then begin a:=2 end ;
+begin a:=2 ;
+b:=3;
+c := 4 end ;
 
-if 3 then
-begin b:=4 end   ;
 
-if 5 then
+begin a := 1 end ;
+
 begin
-   c := 6
+
+    a := 10;
+    b := 20 ;
+
+    c := 30
 
 end ;
 
-aax := 1 div 5 / (1 - b)    ;
-b := 4    ;
-if 3+4 then
-while 6-7 do
-a := 50
+begin a:=100 ;
+
+      b:= 200 ;
+
+      begin
+
+            c := 300;
+
+            d:= 400
+            end
+
+end ;
+
+begin end;
+begin begin end end ;
+
+f := 1000;
+
+begin begin begin b := 10 end end end ;
+
+begin begin jj := 300 end end ;
+
+t := 50000 
+
+
+
+
