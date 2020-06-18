@@ -44,12 +44,13 @@ public class Parser {
 
 	    
             Stmt st = stmt();
-            while(st == null) {
+            while (st == null) {
                 lookahead = lex.scan();
                 st = stmt();
             }
+            
             stmtList.add(st);
-            st.accept(visitor);    // this is AST printing functions
+            st.accept(visitor);    // AST printing functions
             System.out.println();
             
             if (lookahead.toString().equals(";")) { 
@@ -61,7 +62,6 @@ public class Parser {
                 
             } else if (lookahead.toString().equals("\n")) {
 
-                //System.out.println("When new line");
                 System.out.println("stmtList size is : " + stmtList.size());
                 lookahead = null;   
             }
@@ -69,17 +69,17 @@ public class Parser {
     }
 
     public void printList() throws IOException {
-        for(int i = 0; i < stmtList.size(); i++) {
+        for (int i = 0; i < stmtList.size(); i++) {
             stmtList.get(i).accept(visitor);
             System.out.println();
         }
     }
     
-    public Expr Start() throws IOException {
+    public Stmt Start() throws IOException {
         
-        Expr e;
-        e = expr();
-        return e;
+        Stmt s;
+        s = stmt();
+        return s;
         
     }
 
@@ -87,7 +87,7 @@ public class Parser {
 
         if (lookahead.toString().equals(";")) {
 
-            //System.out.println("inside semicolon case");
+            
            
                 lookahead = lex.scan();
                 Stmt stmt = stmt();
@@ -106,29 +106,25 @@ public class Parser {
             
         }
 
-        if(lookahead.toString().equals("\n")) {
-            //System.out.println("inside new line case");
+        if (lookahead.toString().equals("\n")) {
+            
             lookahead = lex.scan();
                     
             while (lookahead != null) {
 
                 if (lookahead.tag == Tag.END) {
-
-                    //System.out.println( "END matched last BEGIN!" );
-                        
-                    //lookahead = lex.scan();
+                       
                     return;
                         
                 } else if (lookahead.toString().equals("\n")) {
                     lookahead = lex.scan();
-                } else throw new IOException("Syntax error in Begin-End : DID NOT MATCH END!!!");
+                } else throw new IOException("Syntax error in Block : DID NOT MATCH END");
             }
            
         }
 
         return ;
-        //or should I throw an error here???
-
+        
     }
 
 
@@ -147,15 +143,13 @@ public class Parser {
            
             Stmt stmt = stmt();
             
-            while(stmt == null) {
+            while (stmt == null) {
                 lookahead = lex.scan();
                 stmt = stmt();
             }
             
             Stmt if_stmt = new If(expr, stmt);
-           
-            //stmtList.add(if_stmt);
-            
+                                   
             return if_stmt;
  
         }
@@ -177,107 +171,50 @@ public class Parser {
             
             Stmt while_stmt = new While(expr, stmt);
 
-            //stmtList.add(while_stmt);
-
             return while_stmt;
 
             
         }
-        /* 
-          else if (lookahead.tag == Tag.BEGIN) {
-
-          //beginIndex = stmtList.size(); // but there can be several begin ... end statements
-          // need to do local , and track locally
-            
-          //List<Stmt> localStmtList = new ArrayList<Stmt>();
-
-          //tabs++;
-            
-          lookahead = lex.scan();
-     
-          Stmt stmt = stmt(); // only one statement but should be able to contain multiple
-
-          while (stmt == null) {
-          lookahead = lex.scan();
-          stmt = stmt();
-          }
-
-          // opt_stmts.add(stmt)
-            
-          while (lookahead.tag != Tag.END) {
-          lookahead = lex.scan();
-          }
-            
-          match("end");
-
-          //endIndex = stmtList.size();
-            
-
-          return stmt;
-                  
-          }
-        */
+        
         else if (lookahead.tag == Tag.BEGIN) {
-            // IMPORTANT!!!
-            // there are 3 possible cases:
-
-            // 1. null case , when there is no statement between BEGIN and END
-
-            // 2. one stmt case ending with '\n', only one stmt
-
-            // 3. multiple stmts each separated with ';' and the last one
-            // ending with '\n' .
-            //System.out.println("entered Begin");
+            
             List<Stmt> opt_stmts = new ArrayList<Stmt>();
             
             lookahead = lex.scan();
             
-            if (lookahead.tag == Tag.END) { // null statement case!
-                    System.out.println("Null stmt case in BEGIN -END block");
+            if (lookahead.tag == Tag.END) { // null stmt case
+                
                     lookahead = lex.scan();
-                    return new Block(opt_stmts); //or maybe even return!!!
+                    return new Block(opt_stmts);
+                    
             }
 
             Stmt stmt = stmt();
 
-            //System.out.println("BEGIN : lookahead after stmt is " + lookahead.toString());
-            
             while (stmt == null) {
-                // System.out.println("BEGIN : so the initial stmt is null");
+               
                 lookahead = lex.scan();
                 
-                if (lookahead.tag == Tag.END) { // null statement case!
-                    //System.out.println("Null stmt case in BEGIN -END block");
-                    //stmt = null;
+                if (lookahead.tag == Tag.END) { 
+                    
                     lookahead = lex.scan();
-                    return new Block(opt_stmts); //or maybe even return!!!
+                    return new Block(opt_stmts); 
                 }
                 
                 stmt = stmt();
             }
 
-            //System.out.println("before entering recursion, lookahead is : " + lookahead.toString());
+            
             
             opt_stmts.add(stmt);
             
             recursiveBlockStmt(opt_stmts);
 
-            //System.out.println("size of opt_stmts : " + opt_stmts.size());
             lookahead = lex.scan();
+            
             return new Block( opt_stmts );
-            // can't add without confirming end!
-            //opt_stmts.add(stmt); // now contains at least one statement!
-            
-            // if it reached this print, now only 2 cases: one or mulitple stmts;
-            
-            // one stmt case  : 
-            // do I need to while loop in order to find this '\n' ???           
-            
-            
-
-            
-
-            
+                  
+                        
         } else if (lookahead.tag == Tag.ID) { 
             
             Identifier id = new Identifier(lookahead);
@@ -291,8 +228,6 @@ public class Parser {
                 Expr expr = expr();
                 
                 Stmt stmt = new Assign(id, expr);
-                
-                //stmtList.add(stmt);
                 
                 return stmt;
 

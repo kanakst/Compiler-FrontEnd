@@ -1,1 +1,0 @@
-kanat@kanat-desktop.3550:1592442216
