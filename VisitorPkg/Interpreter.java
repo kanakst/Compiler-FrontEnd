@@ -186,7 +186,7 @@ public class Interpreter implements Visitor {
             n.blockStmtList.get(i).accept(this);
             System.out.println();
         }
-        //--Parser.tabs;
+        --Parser.tabs;
         printTabs(localtabs-1);
         System.out.println("}");
     }

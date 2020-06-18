@@ -36,7 +36,25 @@ begin begin begin b := 10 end end end ;
 
 begin begin jj := 300 end end ;
 
-t := 50000 
+t := 50000 ;
+
+if 5 then
+while 10 do
+a:=b;
+
+if 4*(5-3) then
+begin
+a:=b ;
+c := d ;
+
+begin
+
+rrr := 1000
+end
+
+end
+
+
 
 
 
