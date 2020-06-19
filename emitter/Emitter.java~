@@ -1,0 +1,25 @@
+package emitter;
+
+import lexer.*;
+import newparser.*;
+
+import newAST.*;
+import VisitorPkg.*;
+
+import java.io.*;
+import java.util.*;
+
+public class Emitter {
+
+    private Parser pars;
+    
+    public Emitter(Parser parser) {
+        pars = parser;
+    }
+
+    public void stmtEmitter(List<Stmt> list) {
+
+        System.out.println("from Emmitter : stmtlist size is : " + list.size());
+
+    }
+}

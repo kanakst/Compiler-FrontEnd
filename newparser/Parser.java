@@ -17,10 +17,10 @@ public class Parser {
     public List<Stmt> stmtList = new ArrayList<Stmt>();
     public List<Stmt> opt_stmts = new ArrayList<Stmt>();
 
-    public int currIndex = 0;
+    
     public static int tabs = 0;
 
-    public int blockNum = 0;
+    
        
     public Parser(Lexer lexer) {
         lex = lexer;
@@ -50,19 +50,19 @@ public class Parser {
             }
             
             stmtList.add(st);
-            st.accept(visitor);    // AST printing functions
-            System.out.println();
+            //st.accept(visitor);    // AST printing functions
+            // System.out.println();
             
             if (lookahead.toString().equals(";")) { 
                 
                 tabs = 0;
-                System.out.println("stmtList size is : " + stmtList.size());
-                System.out.println();
+                //System.out.println("stmtList size is : " + stmtList.size());
+                //System.out.println();
                 lookahead = lex.scan();
                 
             } else if (lookahead.toString().equals("\n")) {
 
-                System.out.println("stmtList size is : " + stmtList.size());
+                //System.out.println("stmtList size is : " + stmtList.size());
                 lookahead = null;   
             }
         }
@@ -71,6 +71,9 @@ public class Parser {
     public void printList() throws IOException {
         for (int i = 0; i < stmtList.size(); i++) {
             stmtList.get(i).accept(visitor);
+            System.out.println();
+            System.out.println();
+            System.out.println("stmtList index is : " + i);
             System.out.println();
         }
     }

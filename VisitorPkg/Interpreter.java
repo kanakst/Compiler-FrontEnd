@@ -5,6 +5,7 @@ import lexer.*;
 import newparser.*;
 
 public class Interpreter implements Visitor {
+
     public void printTabs(int tabsNum) {
         for (int i = 0; i < tabsNum; i++) {
             System.out.print("   ");
@@ -175,12 +176,7 @@ public class Interpreter implements Visitor {
         System.out.println("{");
         ++Parser.tabs; // rethink this one, as should be same for block members
         int localtabs = Parser.tabs;
-
-        if (n.blockStmtList.size() == 0) {
-            //System.out.println("Visitor/Interpreter/block:null case!");
-            //return;
-        }
-        
+                        
         for (int i = 0; i < n.blockStmtList.size(); i++ ) {
             printTabs(localtabs);
             n.blockStmtList.get(i).accept(this);
@@ -188,6 +184,6 @@ public class Interpreter implements Visitor {
         }
         --Parser.tabs;
         printTabs(localtabs-1);
-        System.out.println("}");
+        System.out.print("}");
     }
 }
