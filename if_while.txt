@@ -1,0 +1,20 @@
+if 1000 then
+   if 2000 then
+      if 3000 then
+         if 4000 then
+            aa := 5000;
+
+
+
+if 1000 then
+   while 2000 do
+        if 3000 then
+           while 4000 do
+           while 5000 do
+           while 6000 do
+                 if 7000 then
+                    if 8000 then
+                       if 9000 then
+                          a := 1234567;
+
+asdf := 1234

@@ -6,6 +6,8 @@ public interface Visitor {
     public void visit(TimesExpr n);
     public void visit(DivideExpr n);
     public void visit(ModExpr n);
+
+    public void visit(DivisionExpr n);
     
     public void visit(PlusExpr n);
     public void visit(MinusExpr n);

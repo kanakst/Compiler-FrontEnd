@@ -1,8 +1,8 @@
 package newAST;
 
 import VisitorPkg.*;
-import parser.*;
-import lexer.*;
+
+
 
 public class If extends Stmt {
     public Expr expr;

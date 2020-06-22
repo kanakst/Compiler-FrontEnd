@@ -1,6 +1,0 @@
-
-
-
-if 1000 then
-while 777 do
-lol := 2

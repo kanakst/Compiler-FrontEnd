@@ -4,10 +4,11 @@ import VisitorPkg.*;
 
 
 
-public class MinusExpr extends Expr {
+
+public class DivisionExpr extends Expr {
     public Expr e1, e2;
 
-    public MinusExpr(Expr a1, Expr a2) {
+    public DivisionExpr(Expr a1, Expr a2) {
         e1 = a1;
         e2 = a2;
     }
@@ -15,4 +16,5 @@ public class MinusExpr extends Expr {
     public void accept(Visitor v) {
         v.visit(this);
     }
+
 }

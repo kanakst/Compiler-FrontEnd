@@ -23,7 +23,12 @@ public class Translator implements Visitor {
         System.out.println("div");
     }
 
-    
+    public void visit(DivisionExpr n) {
+        n.e1.accept(this);
+        n.e2.accept(this);
+        System.out.println("/");
+    }
+
     public void visit(ModExpr n) {
         n.e1.accept(this);
         n.e2.accept(this);

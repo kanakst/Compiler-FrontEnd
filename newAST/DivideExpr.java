@@ -2,8 +2,8 @@ package newAST;
 
 import VisitorPkg.*;
 
-import parser.*;
-import lexer.*;
+
+
 
 public class DivideExpr extends Expr {
     public Expr e1, e2;

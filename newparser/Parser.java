@@ -12,7 +12,7 @@ public class Parser {
     private Lexer lex;
     private Token lookahead;
     
-    public Interpreter visitor = new Interpreter(); //is this gonna work?
+    public Interpreter visitor = new Interpreter();
 
     public List<Stmt> stmtList = new ArrayList<Stmt>();
     public List<Stmt> opt_stmts = new ArrayList<Stmt>();
@@ -33,7 +33,7 @@ public class Parser {
             lookahead  = lex.scan();
         }
 
-        else throw new IOException ("in match : Syntax Error!");
+        else throw new IOException ("in match() : Syntax Error in line : " + lex.line);
     }
 
     public void parse() throws IOException {
@@ -50,9 +50,16 @@ public class Parser {
             }
             
             stmtList.add(st);
-            //st.accept(visitor);    // AST printing functions
-            // System.out.println();
             
+
+            //modified lines :
+            if (lookahead.toString().equals("\n")) {
+                //tabs = 0;
+                //lex.line++;
+                lookahead = null;
+            }
+            
+            /*
             if (lookahead.toString().equals(";")) { 
                 
                 tabs = 0;
@@ -65,6 +72,7 @@ public class Parser {
                 //System.out.println("stmtList size is : " + stmtList.size());
                 lookahead = null;   
             }
+            */
         }
     }
 
@@ -89,8 +97,6 @@ public class Parser {
     public void recursiveBlockStmt (List<Stmt> res) throws IOException {
 
         if (lookahead.toString().equals(";")) {
-
-            
            
                 lookahead = lex.scan();
                 Stmt stmt = stmt();
@@ -99,13 +105,10 @@ public class Parser {
                     lookahead = lex.scan();
                     stmt = stmt();
                 }
-
                   
                 res.add(stmt);
 
                 recursiveBlockStmt(res);              
-                  
-                          
             
         }
 
@@ -120,8 +123,10 @@ public class Parser {
                     return;
                         
                 } else if (lookahead.toString().equals("\n")) {
+
                     lookahead = lex.scan();
-                } else throw new IOException("Syntax error in Block : DID NOT MATCH END");
+
+                } else throw new IOException("Syntax error in Block : DID NOT MATCH END in line : " + lex.line);
             }
            
         }
@@ -185,7 +190,7 @@ public class Parser {
             
             lookahead = lex.scan();
             
-            if (lookahead.tag == Tag.END) { // null stmt case
+            if (lookahead.tag == Tag.END) {
                 
                     lookahead = lex.scan();
                     return new Block(opt_stmts);
@@ -206,8 +211,6 @@ public class Parser {
                 
                 stmt = stmt();
             }
-
-            
             
             opt_stmts.add(stmt);
             
@@ -234,13 +237,13 @@ public class Parser {
                 
                 return stmt;
 
-            } else throw new IOException ("in stmt() in Tag.ID : Syntax Error");
+            } else throw new IOException ("in stmt() in Tag.ID : Syntax Error in line : " + lex.line);
 
         } else if (lookahead.toString().equals("\n")) {
-
+            //lex.line++;
             return null;
             
-        } else throw new IOException ("in stmt() : Syntax Error");
+        } else throw new IOException ("in stmt() : Syntax Error in line : " + lex.line);
     
         
     }
@@ -270,7 +273,8 @@ public class Parser {
             Expr e1 = new PlusExpr(termFirst, e2);
             return e1;
 
-        } else if(lookahead.tag == Tag.MINUSSIGN) {
+        } else if (lookahead.tag == Tag.MINUSSIGN) {
+            
             lookahead = lex.scan();
             Expr termSecond = term();
             Expr e2 = moreterms(termSecond);
@@ -279,7 +283,8 @@ public class Parser {
             }
             Expr e1 = new MinusExpr(termFirst, e2);
             return e1;
-        } else if ( lookahead.toString().equals(";") ) { 
+            
+        } else if ( lookahead.toString().equals(";")) { 
             return termFirst;
         }
         else if (lookahead.toString().equals("\n")) {
@@ -289,7 +294,7 @@ public class Parser {
         else if (lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO || lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET){
             return termFirst;
         }
-        else throw new IOException("in moreterms: Syntax Error");
+        else throw new IOException("in moreterms(): Syntax Error in line : " + lex.line);
     }
 
     public Expr term() throws IOException {
@@ -313,7 +318,7 @@ public class Parser {
             }
             Expr e1 = new TimesExpr(factorFirst, e2);
             return e1;
-        } else if (lookahead.tag == Tag.DIVIDESIGN || lookahead.tag == Tag.DIVISION ) {
+        } else if (lookahead.tag == Tag.DIVIDESIGN ) {
             lookahead = lex.scan();
             Expr factorSecond = factor();
             Expr e2 = morefactors(factorSecond);
@@ -321,6 +326,16 @@ public class Parser {
                 e2 = factorSecond;
             }
             Expr e1 = new DivideExpr(factorFirst, e2);
+            return e1;
+
+        }  else if (lookahead.tag == Tag.DIVISION) {
+            lookahead = lex.scan();
+            Expr factorSecond = factor();
+            Expr e2 = morefactors(factorSecond);
+            if(e2 == null) {
+                e2 = factorSecond;
+            }
+            Expr e1 = new DivisionExpr(factorFirst, e2);
             return e1;
         } else if (lookahead.tag == Tag.MOD) {
             lookahead = lex.scan();
@@ -341,12 +356,12 @@ public class Parser {
         
 
         } else if (lookahead.toString().equals("\n")) {
-            
+            //lex.line++;
             return factorFirst;
             
         } else {
             
-            throw new IOException("in morefactors() : Syntax Error");
+            throw new IOException("in morefactors() : Syntax Error in line : " + lex.line);
         }
     }
 
@@ -356,7 +371,6 @@ public class Parser {
             
             Numerical numerical = new Numerical(lookahead);
             lookahead = lex.scan();
-           
             return numerical; 
             
             
@@ -375,7 +389,7 @@ public class Parser {
             
            
         }
-        else throw new IOException ("in factor : Syntax Error");
+        else throw new IOException ("in factor() : Syntax Error in line : " + lex.line);
     }
 
     

@@ -32,7 +32,7 @@ public class Interpreter implements Visitor {
 
     public void visit(DivideExpr n) {
 
-        System.out.println("/");
+        System.out.println("div");
 
         ++Parser.tabs;
         int localtabs = Parser.tabs;
@@ -45,6 +45,22 @@ public class Interpreter implements Visitor {
         n.e2.accept(this);
 
         --Parser.tabs;
+    }
+
+    public void visit(DivisionExpr n) {
+        System.out.println("/");
+
+        ++Parser.tabs;
+        int localtabs = Parser.tabs;
+
+        printTabs(localtabs);
+        n.e1.accept(this);
+
+        System.out.println();
+        printTabs(localtabs);
+        n.e2.accept(this);
+
+        --Parser.tabs; 
     }
 
     public void visit(ModExpr n) {

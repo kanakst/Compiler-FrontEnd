@@ -12,10 +12,16 @@ public class Main {
         Emitter myemitter = new Emitter(myparser);
 
         myparser.parse();
-        // System.out.println("printing stmtlist: ");
-        // myparser.printList();
 
-        myemitter.stmtEmitter(myparser.stmtList);
+        if (args[0].equals("ast")) {
+            System.out.println("printing AST : ");
+            myparser.printList();
+        }
+
+        else if (args[0].equals("code")) {
+            System.out.println("printing pseudo-machine code : ");
+            myemitter.stmtEmitter(myparser.stmtList);
+        }
 
     }
 }

@@ -1,8 +1,6 @@
 package newAST;
 
 import VisitorPkg.*;
-import parser.*;
-import lexer.*;
 
 public class TimesExpr extends Expr {
     public Expr e1, e2;
