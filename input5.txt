@@ -1,0 +1,12 @@
+if 100 then
+begin
+if 200 then
+a := 200;
+if 300 then
+b := 300;
+while 1000 do
+begin
+g := h;
+i := 777
+end
+end
