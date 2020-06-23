@@ -2,10 +2,8 @@ package newAST;
 
 import VisitorPkg.*;
 
-
-
-
 public class DivideExpr extends Expr {
+
     public Expr e1, e2;
 
     public DivideExpr(Expr a1, Expr a2) {
@@ -16,5 +14,4 @@ public class DivideExpr extends Expr {
     public void accept(Visitor v) {
         v.visit(this);
     }
-
 }

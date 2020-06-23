@@ -4,10 +4,10 @@ import VisitorPkg.*;
 import lexer.*;
 
 public class Numerical extends Expr {
+
     public int value;
     public Token token;
-    
-    
+        
     public Numerical(Token t) {
         this.token = t;
         this.value = Integer.parseInt(token.toString());

@@ -2,8 +2,8 @@ package newAST;
 
 import VisitorPkg.*;
 
-
 public class PlusExpr extends Expr {
+
     public Expr e1, e2;
 
     public PlusExpr(Expr a1, Expr a2) {

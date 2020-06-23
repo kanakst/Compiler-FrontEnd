@@ -2,9 +2,8 @@ package newAST;
 
 import VisitorPkg.*;
 
-
-
 public class MinusExpr extends Expr {
+
     public Expr e1, e2;
 
     public MinusExpr(Expr a1, Expr a2) {

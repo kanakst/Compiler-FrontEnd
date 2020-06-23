@@ -15,6 +15,7 @@ public class Main {
 
         if (args[0].equals("ast")) {
             System.out.println("printing AST : ");
+            System.out.println();
             myparser.printList();
         }
 

@@ -2,9 +2,8 @@ package newAST;
 
 import VisitorPkg.*;
 
-
-
 public class If extends Stmt {
+
     public Expr expr;
     public Stmt stmt;
 
@@ -16,6 +15,4 @@ public class If extends Stmt {
     public void accept(Visitor v) {
         v.visit(this);
     }
-
-    
 }
