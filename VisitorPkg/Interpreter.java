@@ -27,7 +27,7 @@ public class Interpreter implements Visitor {
 
     public void visit(DivideExpr n) {
 
-        System.out.println("div");
+        System.out.println("/");
         ++Parser.tabs;
         int localtabs = Parser.tabs;
         printTabs(localtabs);
@@ -40,7 +40,7 @@ public class Interpreter implements Visitor {
 
     public void visit(DivisionExpr n) {
 
-        System.out.println("/");
+        System.out.println("div");
         ++Parser.tabs;
         int localtabs = Parser.tabs;
         printTabs(localtabs);
@@ -102,7 +102,7 @@ public class Interpreter implements Visitor {
 
     public void visit(Assign n) {
 
-        System.out.println("Assign");
+        System.out.println("store");
         ++Parser.tabs;
         int localtabs = Parser.tabs;
         printTabs(localtabs);

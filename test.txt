@@ -1,0 +1,17 @@
+begin
+begin
+   y := 95; m := 42;
+   day :=(1461*y) div 4   +   (153*m + 2) div 5 + d;
+   while 3 mod 1 do
+     day1 := (1461*y1) div 4 + (153*m1 + 2) div 5 + d1;
+   if 1 div 0 then
+     day2 := (1461*y2) div 4 + (153*m2 + 2) div 5 + d2;
+   val := ( a + b mod c ) div ( 89 * 20 );
+   result := val / 7
+end;
+begin
+end;
+begin
+ single := line + 0
+end
+end

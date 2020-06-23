@@ -1,5 +1,9 @@
 begin
 
+if 3 div 5 then a:=10000 ;
+
+if 44 / 777 then asdf := 9999 ;
+
 a:=10;
 
 if 4 then b := 200 ;

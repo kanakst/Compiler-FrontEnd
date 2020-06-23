@@ -12,9 +12,7 @@ public class Main {
         Emitter myemitter = new Emitter(myparser);
 
         myparser.parse();
-
-        
-        
+                
         if (args[0].equals("ast")) {
             System.out.println("printing AST : ");
             System.out.println();

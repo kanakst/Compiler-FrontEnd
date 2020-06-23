@@ -17,7 +17,7 @@ public class Emitter {
     }
 
     public void stmtEmitter(List<Stmt> list) {
-       
+
         for (int i = 0; i < list.size(); i++) {
             System.out.println();
             pars.stmtList.get(i).accept(visitor);

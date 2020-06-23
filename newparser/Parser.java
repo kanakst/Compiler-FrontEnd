@@ -83,6 +83,7 @@ public class Parser {
     }
 
     public Stmt stmt() throws IOException { 
+
         if (lookahead.tag == Tag.IF) { 
             lookahead = lex.scan();
             Expr expr = expr();
@@ -155,21 +156,21 @@ public class Parser {
         if (lookahead.tag == Tag.PLUSSIGN) {
             lookahead = lex.scan();
             Expr termSecond = term();
-            Expr e2 = moreterms(termSecond);
+            Expr tester = new PlusExpr(termFirst, termSecond);
+            Expr e2 = moreterms(tester);
             if (e2 == null) {
-                e2 = termSecond;
+                e2 = tester;
             }
-            Expr e1 = new PlusExpr(termFirst, e2);
-            return e1;
+            return e2;
         } else if (lookahead.tag == Tag.MINUSSIGN) {
             lookahead = lex.scan();
             Expr termSecond = term();
-            Expr e2 = moreterms(termSecond);
+            Expr tester = new MinusExpr(termFirst, termSecond);
+            Expr e2 = moreterms(tester);
             if (e2 == null) {
-                e2 = termSecond;
+                e2 = tester;
             }
-            Expr e1 = new MinusExpr(termFirst, e2);
-            return e1;
+            return e2;
         } else if (lookahead.toString().equals(";") || lookahead.toString().equals("\n")
                    || lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO
                    || lookahead.tag == Tag.END || lookahead.tag == Tag.RIGHTBRACKET ) { 
@@ -191,39 +192,39 @@ public class Parser {
         if (lookahead.tag == Tag.MULTIPLYSIGN) {
             lookahead = lex.scan();
             Expr factorSecond = factor();
-            Expr e2 = morefactors(factorSecond);
+            Expr tester = new TimesExpr(factorFirst, factorSecond);
+            Expr e2 = morefactors(tester);
             if (e2 == null) {
-                e2 = factorSecond;
+                e2 = tester;
             }
-            Expr e1 = new TimesExpr(factorFirst, e2);
-            return e1;
+            return e2;
         } else if (lookahead.tag == Tag.DIVIDESIGN ) {
             lookahead = lex.scan();
             Expr factorSecond = factor();
-            Expr e2 = morefactors(factorSecond);
+            Expr tester = new DivideExpr(factorFirst, factorSecond);
+            Expr e2 = morefactors(tester);
             if (e2 == null) {
-                e2 = factorSecond;
+                e2 = tester;
             }
-            Expr e1 = new DivideExpr(factorFirst, e2);
-            return e1;
+            return e2;
         } else if (lookahead.tag == Tag.DIVISION) {
             lookahead = lex.scan();
             Expr factorSecond = factor();
-            Expr e2 = morefactors(factorSecond);
+            Expr tester = new DivisionExpr(factorFirst, factorSecond);
+            Expr e2 = morefactors(tester);
             if (e2 == null) {
-                e2 = factorSecond;
+                e2 = tester;
             }
-            Expr e1 = new DivisionExpr(factorFirst, e2);
-            return e1;
+            return e2;
         } else if (lookahead.tag == Tag.MOD) {
             lookahead = lex.scan();
             Expr factorSecond = factor();
-            Expr e2 = morefactors(factorSecond);
+            Expr tester = new ModExpr(factorFirst, factorSecond);
+            Expr e2 = morefactors(tester);
             if (e2 == null) {
-                e2 = factorSecond;
+                e2 = tester;
             }
-            Expr e1 = new ModExpr(factorFirst, e2);
-            return e1;
+            return e2;
         } else if (lookahead.toString().equals(";") || lookahead.toString().equals("\n")
                    || lookahead.tag == Tag.PLUSSIGN || lookahead.tag == Tag.MINUSSIGN
                    || lookahead.tag == Tag.THEN || lookahead.tag == Tag.DO

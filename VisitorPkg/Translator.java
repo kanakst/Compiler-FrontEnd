@@ -19,14 +19,14 @@ public class Translator implements Visitor {
 
         n.e1.accept(this);
         n.e2.accept(this);
-        System.out.println("div");
+        System.out.println("/");
     }
 
     public void visit(DivisionExpr n) {
 
         n.e1.accept(this);
         n.e2.accept(this);
-        System.out.println("/");
+        System.out.println("div");
     }
 
     public void visit(ModExpr n) {
@@ -71,7 +71,7 @@ public class Translator implements Visitor {
         ++assign_status;
         n.id.accept(this);
         n.expr.accept(this);
-        System.out.println(":=");
+        System.out.println("store");
     }
 
     public void visit(If n) {
@@ -92,12 +92,12 @@ public class Translator implements Visitor {
         while_label = while_label + 1;
         int false_label = while_label;
         while_label = while_label + 1;
-        System.out.println("label L" + true_label); // 777
+        System.out.println("label L" + true_label);
         n.expr.accept(this);
-        System.out.println("gofalse L" + false_label); // 55
+        System.out.println("gofalse L" + false_label);
         n.stmt.accept(this);
-        System.out.println("goto L" + true_label); //777
-        System.out.println("label L" + false_label); // 55
+        System.out.println("goto L" + true_label);
+        System.out.println("label L" + false_label);
     }
 
     public void visit(Block n) {
